@@ -83,7 +83,6 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
         private bool _disruptable;
         private bool _wasCoral;
         private bool _isPlacingCoral;
-        private bool _alreadyPlaced;
         private float _delay;
         private ReefscapeSetpoints? _bufferedSetpoint;
         private bool _bufferAlgaeState;
@@ -95,13 +94,18 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
 
             superCycler = true;
 
-            armJoint.SetPid(armPidConstants);
-            intakeJoint.SetPid(intakePidConstants);
-            climberJoint.SetPid(climberPidConstants);
+            if (armJoint != null && armPidConstants != null)
+                armJoint.SetPid(armPidConstants);
+            if (intakeJoint != null && intakePidConstants != null)
+                intakeJoint.SetPid(intakePidConstants);
+            if (climberJoint != null && climberPidConstants != null)
+                climberJoint.SetPid(climberPidConstants);
 
-            targetArmAngle = coralStowSetpoint.armAngle;
+            if (coralStowSetpoint != null)
+                targetArmAngle = coralStowSetpoint.armAngle;
             targetElevatorHeight = 0;
-            targetClimberAngle = stowSetpoint.climberAngle;
+            if (stowSetpoint != null)
+                targetClimberAngle = stowSetpoint.climberAngle;
 
             RobotGamePieceController.SetPreload(coralArmStowState);
             _coralController = RobotGamePieceController.GetPieceByName(ReefscapeGamePieceType.Coral.ToString());
@@ -121,7 +125,6 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
             _intakeSequenceRunning = false;
             _wasCoral = false;
             _isPlacingCoral = false;
-            _alreadyPlaced = false;
             _bufferedSetpoint = null;
             _bufferAlgaeState = false;
             _delay = 200; //its backwards I dont know why
@@ -129,9 +132,12 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
 
         private void LateUpdate()
         {
-            armJoint.UpdatePid(armPidConstants);
-            intakeJoint.UpdatePid(intakePidConstants);
-            climberJoint.UpdatePid(climberPidConstants);
+            if (armJoint != null && armPidConstants != null)
+                armJoint.UpdatePid(armPidConstants);
+            if (intakeJoint != null && intakePidConstants != null)
+                intakeJoint.UpdatePid(intakePidConstants);
+            if (climberJoint != null && climberPidConstants != null)
+                climberJoint.UpdatePid(climberPidConstants);
         }
 
         private void FixedUpdate()
@@ -174,8 +180,11 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                 }
             }
 
-            if (((_coralController.currentStateNum != coralArmStowState.stateNum && !_disruptable) &&
-                 !_coralController.atTarget) || _intakeSequenceRunning)
+            // Don't auto-stow override while placing
+            bool allowAutoStowOverride = CurrentSetpoint != ReefscapeSetpoints.Place && !_isPlacingCoral;
+            
+            if (allowAutoStowOverride && (((_coralController.currentStateNum != coralArmStowState.stateNum && !_disruptable) &&
+                 !_coralController.atTarget) || _intakeSequenceRunning))
             {
                 if (!_disruptable && CurrentRobotMode != ReefscapeRobotMode.Coral && _intakeSequenceRunning &&
                     !_algaeController.HasPiece())
@@ -205,10 +214,6 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                 SetRobotMode(ReefscapeRobotMode.Coral);
             }
 
-            if (CurrentSetpoint != ReefscapeSetpoints.Place)
-            {
-                _alreadyPlaced = false;
-            }
 
             switch (CurrentSetpoint)
             {
@@ -246,9 +251,14 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                             _wasCoral = false;
                         }
                     }
-                    else if (CurrentRobotMode == ReefscapeRobotMode.Coral && _coralController.HasPiece())
+                    else if (CurrentRobotMode != ReefscapeRobotMode.Algae &&
+                             _coralController.currentStateNum == coralArmStowState.stateNum && !_isPlacingCoral)
                     {
-                        // Set place setpoint immediately when in Place mode
+                        StartCoroutine(PlaceCoral());
+                    }
+                    else if (_isPlacingCoral)
+                    {
+                        // Maintain place position after coral is released
                         switch (LastSetpoint)
                         {
                             case ReefscapeSetpoints.L4:
@@ -261,13 +271,7 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                                 SetSetpoint(l2PlaceSetpoint);
                                 break;
                         }
-
-                        if (!_alreadyPlaced && OuttakeAction.triggered)
-                        {
-                            StartCoroutine(PlaceCoral());
-                        }
                     }
-                    _alreadyPlaced = true;
                     break;
                 case ReefscapeSetpoints.L1:
                     SetSetpoint(l1Setpoint);
@@ -322,7 +326,7 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
         {
             _isPlacingCoral = true;
 
-            // Set place setpoint (like GRR does in coroutine)
+            // Set place setpoint based on LastSetpoint
             switch (LastSetpoint)
             {
                 case ReefscapeSetpoints.L4:
@@ -336,24 +340,20 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                     break;
             }
 
-            yield return new WaitForSeconds(0.05f);
+            // Wait for arm to reach target angle before releasing
+            yield return new WaitUntil(() =>
+                Mathf.Abs(Utils.WrapAngle180(armJoint.GetSingleAxisAngle(JointAxis.X)) - targetArmAngle) <= _delay);
 
-            if (CurrentRobotMode == ReefscapeRobotMode.Coral && _coralController.HasPiece())
+            if (LastSetpoint != ReefscapeSetpoints.L1)
             {
-                if (LastSetpoint != ReefscapeSetpoints.L1)
-                {
-                    _coralController.ReleaseGamePieceWithForce(FacingReef
-                        ? new Vector3(0, -1.5f, 2.5f)
-                        : new Vector3(0, 1.5f, -2.5f));
-                }
-                else
-                {
-                    _coralController.ReleaseGamePieceWithForce(new Vector3(0, -2f, 0));
-                }
+                _coralController.ReleaseGamePieceWithForce(FacingReef
+                    ? new Vector3(0, -1.5f, 2.5f)
+                    : new Vector3(0, 1.5f, -2.5f));
             }
-            
-            _isPlacingCoral = false;
-            yield break;
+            else
+            {
+                _coralController.ReleaseGamePieceWithForce(new Vector3(0, -2f, 0));
+            }
         }
 
         private void CheckFacingBarge()
