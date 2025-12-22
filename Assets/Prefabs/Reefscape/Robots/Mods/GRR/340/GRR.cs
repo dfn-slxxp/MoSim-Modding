@@ -1,0 +1,344 @@
+using System.Collections;
+using Games.Reefscape.Enums;
+using Games.Reefscape.FieldScripts;
+using Games.Reefscape.GamePieceSystem;
+using Games.Reefscape.Robots;
+using MoSimCore.BaseClasses.GameManagement;
+using MoSimCore.Enums;
+using MoSimLib;
+using RobotFramework.Components;
+using RobotFramework.Controllers.GamePieceSystem;
+using RobotFramework.Controllers.PidSystems;
+using RobotFramework.Enums;
+using RobotFramework.GamePieceSystem;
+using UnityEngine;
+
+namespace Prefabs.Reefscape.Robots.Mods.GRR._340
+{
+    public class GRR : ReefscapeRobotBase
+    {
+        [Header("Robot Components")] [SerializeField]
+        private GenericJoint wristJoint;
+
+        [SerializeField] private GenericElevator elevator;
+        [SerializeField] private GenericJoint climber;
+        [SerializeField] private GenericRoller[] funnelRollers;
+
+        [Header("Roller Settings")] [SerializeField]
+        private float rollerSpeed = 500f;
+
+        [Header("PID Constants")] [SerializeField]
+        private PidConstants wristPIDMI;
+
+        [SerializeField] private PidConstants climberPIDMI;
+
+        [Header("Setpoints")] [SerializeField]
+        private GRRSetpoint coralIntake;
+
+        [SerializeField] private GRRSetpoint stow;
+        [SerializeField] private GRRSetpoint coralStow;
+        [SerializeField] private GRRSetpoint l1;
+        [SerializeField] private GRRSetpoint l2;
+        [SerializeField] private GRRSetpoint l2Place;
+        [SerializeField] private GRRSetpoint l3;
+        [SerializeField] private GRRSetpoint l3Place;
+        [SerializeField] private GRRSetpoint l4;
+        [SerializeField] private GRRSetpoint l4Place;
+        [SerializeField] private GRRSetpoint lowAlgae;
+        [SerializeField] private GRRSetpoint highAlgae;
+        [SerializeField] private GRRSetpoint climb;
+        [SerializeField] private GRRSetpoint climbed;
+
+        [Header("Game Piece Intakes")] [SerializeField]
+        private ReefscapeGamePieceIntake coralIntakeComponent;
+
+        [Header("Game Piece States")] [SerializeField]
+        private string currentState;
+
+        [SerializeField] private GamePieceState coralIntakeState;
+        [SerializeField] private GamePieceState coralStowState;
+
+        [Header("Target Positions")] [SerializeField]
+        private float targetWristAngle;
+
+        [SerializeField] private float targetElevatorDistance;
+        [SerializeField] private float targetClimberAngle;
+
+        [Header("Robot Audio")] [SerializeField]
+        private AudioSource rollerSource;
+
+        private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode coralController;
+
+        private ReefscapeSetpoints _previousSetpoint;
+        private bool alreadyPlaced;
+
+        protected override void Start()
+        {
+            base.Start();
+
+            wristJoint.SetPid(wristPIDMI);
+            climber.SetPid(climberPIDMI);
+
+            targetWristAngle = coralStow.wristTarget;
+            targetElevatorDistance = 0;
+            targetClimberAngle = stow.climberTarget;
+            
+            _previousSetpoint = ReefscapeSetpoints.Stow;
+
+            RobotGamePieceController.SetPreload(coralStowState);
+            coralController = RobotGamePieceController.GetPieceByName(ReefscapeGamePieceType.Coral.ToString());
+
+            coralController.gamePieceStates = new[] { coralIntakeState, coralStowState };
+            coralController.intakes.Add(coralIntakeComponent);
+
+            // Set initial roller speed
+            foreach (var roller in funnelRollers)
+            {
+                roller.SetAngularVelocity(rollerSpeed);
+            }
+
+            alreadyPlaced = false;
+        }
+
+        private void LateUpdate()
+        {
+            wristJoint.UpdatePid(wristPIDMI);
+            climber.UpdatePid(climberPIDMI);
+        }
+
+        private void FixedUpdate()
+        {
+            if (coralController == null)
+            {
+                return;
+            }
+
+            var readState = coralController.GetCurrentState();
+            if (readState != null)
+            {
+                currentState = readState.name;
+            }
+
+            if (CurrentSetpoint != ReefscapeSetpoints.Place)
+            {
+                alreadyPlaced = false;
+            }
+
+            if (BaseGameManager.Instance.RobotState == RobotState.Disabled)
+            {
+                // Stop rollers when disabled
+                if (funnelRollers != null)
+                {
+                    foreach (var roller in funnelRollers)
+                    {
+                        if (roller != null)
+                        {
+                            roller.stopAngularVelocity();
+                        }
+                    }
+                }
+                return;
+            }
+
+            // Control roller speed based on intake state
+            bool isIntaking = (CurrentSetpoint == ReefscapeSetpoints.Intake || 
+                             CurrentSetpoint == ReefscapeSetpoints.L1 || 
+                             CurrentSetpoint == ReefscapeSetpoints.L2 || 
+                             CurrentSetpoint == ReefscapeSetpoints.L3 || 
+                             CurrentSetpoint == ReefscapeSetpoints.L4) && 
+                             IntakeAction.IsPressed();
+
+            if (funnelRollers != null)
+            {
+                if (coralController.HasPiece())
+                {
+                    // Flip velocity when holding a piece
+                    foreach (var roller in funnelRollers)
+                    {
+                        if (roller != null)
+                        {
+                            roller.flipVelocity();
+                        }
+                    }
+                }
+                else if (isIntaking)
+                {
+                    // Set normal intake speed when intaking
+                    foreach (var roller in funnelRollers)
+                    {
+                        if (roller != null)
+                        {
+                            roller.SetAngularVelocity(rollerSpeed);
+                        }
+                    }
+                }
+                else
+                {
+                    // Stop rollers when not intaking
+                    foreach (var roller in funnelRollers)
+                    {
+                        if (roller != null)
+                        {
+                            roller.stopAngularVelocity();
+                        }
+                    }
+                }
+            }
+
+            switch (CurrentSetpoint)
+            {
+                case ReefscapeSetpoints.Stow:
+                    bool hasCoral = coralController.HasPiece();
+
+                    if (hasCoral)
+                    {
+                        SetSetpoint(coralStow);
+                    }
+                    else
+                    {
+                        SetSetpoint(stow);
+                    }
+
+                    coralController.SetTargetState(coralStowState);
+                    break;
+                case ReefscapeSetpoints.Intake:
+                    bool isCoral = CurrentRobotMode == ReefscapeRobotMode.Coral;
+
+                    coralController.SetTargetState(coralIntakeState);
+                    coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed() && isCoral);
+                    break;
+                case ReefscapeSetpoints.Place:
+                    if (!alreadyPlaced && OuttakeAction.triggered)
+                    {
+                        StartCoroutine(PlacePiece());
+                    }
+                    alreadyPlaced = true;
+                    break;
+                case ReefscapeSetpoints.L1:
+                    SetSetpoint(l1);
+                    coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
+                    break;
+                case ReefscapeSetpoints.Stack:
+                    SetState(ReefscapeSetpoints.Stow);
+                    break;
+                case ReefscapeSetpoints.L2:
+                    // If we don't have coral, redirect to algae setpoints
+                    if (!coralController.HasPiece())
+                    {
+                        SetState(ReefscapeSetpoints.LowAlgae);
+                    }
+                    else
+                    {
+                        SetSetpoint(l2);
+                        coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
+                    }
+                    break;
+                case ReefscapeSetpoints.L3:
+                    // If we don't have coral, redirect to algae setpoints
+                    if (!coralController.HasPiece())
+                    {
+                        SetState(ReefscapeSetpoints.HighAlgae);
+                    }
+                    else
+                    {
+                        SetSetpoint(l3);
+                        coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
+                    }
+                    break;
+                case ReefscapeSetpoints.L4:
+                    SetSetpoint(l4);
+                    coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
+                    break;
+                case ReefscapeSetpoints.LowAlgae:
+                    SetSetpoint(lowAlgae);
+                    targetClimberAngle = lowAlgae.climberTarget;
+                    if (coralController.HasPiece())
+                    {
+                        coralController.RequestIntake(coralIntakeComponent, false);
+                    }
+                    break;
+                case ReefscapeSetpoints.HighAlgae:
+                    SetSetpoint(highAlgae);
+                    targetClimberAngle = highAlgae.climberTarget;
+                    if (coralController.HasPiece())
+                    {
+                        coralController.RequestIntake(coralIntakeComponent, false);
+                    }
+                    break;
+                case ReefscapeSetpoints.RobotSpecial:
+                    SetState(ReefscapeSetpoints.Stow);
+                    break;
+                case ReefscapeSetpoints.Climb:
+                    SetSetpoint(climb);
+                    targetClimberAngle = climb.climberTarget;
+                    coralController.RequestIntake(coralIntakeComponent, false);
+                    break;
+                case ReefscapeSetpoints.Climbed:
+                    SetSetpoint(climbed);
+                    targetClimberAngle = climbed.climberTarget;
+                    coralController.SetTargetState(coralStowState);
+                    break;
+                default:
+                    throw new System.ArgumentOutOfRangeException();
+            }
+
+            _previousSetpoint = CurrentSetpoint;
+            UpdateSetpoints();
+        }
+
+        private void SetSetpoint(GRRSetpoint setpoint)
+        {
+            targetWristAngle = setpoint.wristTarget;
+            targetElevatorDistance = setpoint.elevatorDistance;
+            targetClimberAngle = setpoint.climberTarget;
+        }
+
+        private void UpdateSetpoints()
+        {
+            wristJoint.SetTargetAngle(targetWristAngle).withAxis(JointAxis.X).flipDirection();
+            elevator.SetTarget(targetElevatorDistance);
+            climber.SetTargetAngle(targetClimberAngle).withAxis(JointAxis.Z).flipDirection();
+        }
+
+        private IEnumerator PlacePiece()
+        {
+            switch (LastSetpoint)
+            {
+                case ReefscapeSetpoints.L4:
+                    SetSetpoint(l4Place);
+                    break;
+                case ReefscapeSetpoints.L3:
+                    SetSetpoint(l3Place);
+                    break;
+                case ReefscapeSetpoints.L2:
+                    SetSetpoint(l2Place);
+                    break;
+            }
+
+            //default mode is impulse
+            if (CurrentRobotMode == ReefscapeRobotMode.Coral && coralController.HasPiece())
+            {
+                var time = 0.01f;
+                Vector3 force = new Vector3(0, 0, 5f);
+                var maxSpeed = 0.5f;
+
+                if (LastSetpoint == ReefscapeSetpoints.L4 || LastSetpoint == ReefscapeSetpoints.Barge)
+                {
+                    time = 0.15f;
+                    force = new Vector3(0, 1, 5f);
+                }
+                else if (LastSetpoint == ReefscapeSetpoints.L1)
+                {
+                    time = 0.15f;
+                    force = new Vector3(0, 0, 0.25f);
+                    maxSpeed = 0.15f;
+                }
+
+                coralController.ReleaseGamePieceWithContinuedForce(force, time, maxSpeed);
+            }
+            
+            yield break;
+        }
+    }
+}
+
