@@ -41490,7 +41490,7 @@ MonoBehaviour:
   l3PlaceSetpoint: {fileID: 11400000, guid: b474140fb10fed14a8a538bdd882f787, type: 2}
   highAlgaeSetpoint: {fileID: 11400000, guid: 43b79fbc501e0db4c8706427d8318211, type: 2}
   l4Setpoint: {fileID: 11400000, guid: 7818f927c99caa34aa4502b53b8ba372, type: 2}
-  l4PlaceSetpoint: {fileID: 11400000, guid: 7818f927c99caa34aa4502b53b8ba372, type: 2}
+  l4PlaceSetpoint: {fileID: 11400000, guid: 72941046aafc8ef4cb4ac83942e4972f, type: 2}
   bargeSetpoint: {fileID: 11400000, guid: 588a4af0e7e137542a146b99dd515078, type: 2}
   backBargeSetpoint: {fileID: 11400000, guid: 73fdf8995946e464a8658cc73ea59061, type: 2}
   processorSetpoint: {fileID: 11400000, guid: e3f008bf87155f7499f0ac0f418f6a23, type: 2}

@@ -87,6 +87,9 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
         private ReefscapeSetpoints? _bufferedSetpoint;
         private bool _bufferAlgaeState;
         private bool _facingBarge;
+        private bool _placeLock;
+        private float _placeLockUntil;
+        private float _ignoreIntakeUntil;
 
         protected override void Start()
         {
@@ -128,6 +131,8 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
             _bufferedSetpoint = null;
             _bufferAlgaeState = false;
             _delay = 200; //its backwards I dont know why
+            _placeLock = false;
+            _ignoreIntakeUntil = 0f;
         }
 
         private void LateUpdate()
@@ -142,6 +147,48 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
 
         private void FixedUpdate()
         {
+            // Optional "extra bulletproof" guard: cancel forced Intake during cooldown
+            if (!_isPlacingCoral && Time.time < _ignoreIntakeUntil && CurrentSetpoint == ReefscapeSetpoints.Intake)
+            {
+                SetState(ReefscapeSetpoints.Stow);
+            }
+
+            // If we're in the middle of a place, force the setpoint to stay on Place.
+            if (_isPlacingCoral)
+            {
+                if (CurrentSetpoint != ReefscapeSetpoints.Place)
+                {
+                    SetState(ReefscapeSetpoints.Place);
+                }
+            }
+
+            // Buffer/undo forced Intake setpoint during cooldown after placing
+            if (!_isPlacingCoral && Time.time < _ignoreIntakeUntil && CurrentSetpoint == ReefscapeSetpoints.Intake)
+            {
+                SetState(ReefscapeSetpoints.Stow);
+            }
+
+            // Define two different concepts:
+            // - inPlace: currently in Place setpoint
+            // - holdLock: time-based lock used to prevent stomps AFTER leaving Place
+            bool inPlace = CurrentSetpoint == ReefscapeSetpoints.Place;
+            bool holdLock = _placeLock && Time.time < _placeLockUntil;
+            
+            // Only early-return on holdLock when NOT in Place (post-release hold)
+            // This preserves post-release "don't get stomped" behavior, but allows Place logic to run
+            if (!inPlace && holdLock)
+            {
+                // keep whatever targets were last set; just apply them
+                UpdateSetpoints();
+                return;
+            }
+
+            // Unlock AFTER the hold time expires AND you are not actively in Place anymore
+            if (!inPlace && _placeLock && Time.time >= _placeLockUntil)
+            {
+                _placeLock = false;
+            }
+
             if (_coralController.HasPiece())
             {
                 foreach (var roller in intakeRollers)
@@ -150,61 +197,70 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                 }
             }
 
-            _algaeController.SetTargetState(algaeStowState);
-
-            if (_algaeController.HasPiece() || CurrentSetpoint == ReefscapeSetpoints.Barge)
+            // Only set algae state if not placing coral
+            if (CurrentSetpoint != ReefscapeSetpoints.Place || !_isPlacingCoral)
             {
-                if (CurrentRobotMode == ReefscapeRobotMode.Coral)
+                _algaeController.SetTargetState(algaeStowState);
+            }
+
+            // Skip mode switching, buffered setpoints, and auto-stow logic while in Place or hold locked
+            if (!inPlace && !holdLock)
+            {
+
+                if (_algaeController.HasPiece() || CurrentSetpoint == ReefscapeSetpoints.Barge)
                 {
-                    _wasCoral = true;
+                    if (CurrentRobotMode == ReefscapeRobotMode.Coral)
+                    {
+                        _wasCoral = true;
+                    }
+
+                    SetRobotMode(ReefscapeRobotMode.Algae);
                 }
-
-                SetRobotMode(ReefscapeRobotMode.Algae);
-            }
-            else if (_coralController.HasPiece() && CurrentSetpoint == ReefscapeSetpoints.Place)
-            {
-                SetRobotMode(ReefscapeRobotMode.Coral);
-            }
-
-            if (_disruptable && _bufferAlgaeState)
-            {
-                SetRobotMode(ReefscapeRobotMode.Algae);
-                _bufferAlgaeState = false;
-            }
-
-            if (_intakeSequenceRunning || _coralController.HasPiece())
-            {
-                if (CurrentSetpoint != ReefscapeSetpoints.Stow && CurrentSetpoint != ReefscapeSetpoints.Intake)
+                else if (_coralController.HasPiece() && CurrentSetpoint == ReefscapeSetpoints.Place)
                 {
-                    _bufferedSetpoint = CurrentSetpoint;
-                }
-            }
-
-            // Don't auto-stow override while placing
-            bool allowAutoStowOverride = CurrentSetpoint != ReefscapeSetpoints.Place && !_isPlacingCoral;
-            
-            if (allowAutoStowOverride && (((_coralController.currentStateNum != coralArmStowState.stateNum && !_disruptable) &&
-                 !_coralController.atTarget) || _intakeSequenceRunning))
-            {
-                if (!_disruptable && CurrentRobotMode != ReefscapeRobotMode.Coral && _intakeSequenceRunning &&
-                    !_algaeController.HasPiece())
-                {
-                    _bufferAlgaeState = true;
                     SetRobotMode(ReefscapeRobotMode.Coral);
                 }
-                else if (_disruptable && CurrentRobotMode != ReefscapeRobotMode.Coral)
-                {
-                }
-                else
-                {
-                    SetState(ReefscapeSetpoints.Stow);
-                }
-            }
 
-            if ((!_intakeSequenceRunning && CurrentSetpoint != ReefscapeSetpoints.Intake) && _bufferedSetpoint != null)
-            {
-                SetState(_bufferedSetpoint.Value);
-                _bufferedSetpoint = null;
+                if (_disruptable && _bufferAlgaeState)
+                {
+                    SetRobotMode(ReefscapeRobotMode.Algae);
+                    _bufferAlgaeState = false;
+                }
+
+                if (_intakeSequenceRunning || _coralController.HasPiece())
+                {
+                    if (CurrentSetpoint != ReefscapeSetpoints.Stow && CurrentSetpoint != ReefscapeSetpoints.Intake)
+                    {
+                        _bufferedSetpoint = CurrentSetpoint;
+                    }
+                }
+
+                // Don't auto-stow override while placing
+                bool allowAutoStowOverride = CurrentSetpoint != ReefscapeSetpoints.Place && !_isPlacingCoral;
+                
+                if (allowAutoStowOverride && (((_coralController.currentStateNum != coralArmStowState.stateNum && !_disruptable) &&
+                     !_coralController.atTarget) || _intakeSequenceRunning))
+                {
+                    if (!_disruptable && CurrentRobotMode != ReefscapeRobotMode.Coral && _intakeSequenceRunning &&
+                        !_algaeController.HasPiece())
+                    {
+                        _bufferAlgaeState = true;
+                        SetRobotMode(ReefscapeRobotMode.Coral);
+                    }
+                    else if (_disruptable && CurrentRobotMode != ReefscapeRobotMode.Coral)
+                    {
+                    }
+                    else
+                    {
+                        SetState(ReefscapeSetpoints.Stow);
+                    }
+                }
+
+                if ((!_intakeSequenceRunning && CurrentSetpoint != ReefscapeSetpoints.Intake) && _bufferedSetpoint != null)
+                {
+                    SetState(_bufferedSetpoint.Value);
+                    _bufferedSetpoint = null;
+                }
             }
 
             bool coralAtEE = _coralController.currentStateNum == coralArmStowState.stateNum && _coralController.atTarget;
@@ -228,6 +284,13 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                     targetClimberAngle = stowSetpoint.climberAngle;
                     break;
                 case ReefscapeSetpoints.Intake:
+                    if (Time.time < _ignoreIntakeUntil)
+                    {
+                        // treat Intake as Stow during cooldown so it doesn't snap down
+                        SetState(ReefscapeSetpoints.Stow);
+                        break;
+                    }
+
                     if (CurrentRobotMode == ReefscapeRobotMode.Algae && !_algaeController.HasPiece())
                     {
                         SetSetpoint(algaeGroundIntakeSetpoint);
@@ -236,6 +299,9 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                     }
                     break;
                 case ReefscapeSetpoints.Place:
+                    // Force place setpoint every frame while in Place (but DON'T return - allow Place logic to run)
+                    ApplyPlaceSetpoint();
+                    
                     if (LastSetpoint == ReefscapeSetpoints.Stow && coralAtEE)
                     {
                         SetState(ReefscapeSetpoints.Stow);
@@ -251,26 +317,14 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                             _wasCoral = false;
                         }
                     }
-                    else if (CurrentRobotMode != ReefscapeRobotMode.Algae &&
-                             _coralController.currentStateNum == coralArmStowState.stateNum && !_isPlacingCoral)
+                    else if (!_isPlacingCoral &&
+                             CurrentRobotMode != ReefscapeRobotMode.Algae &&
+                             _coralController.currentStateNum == coralArmStowState.stateNum &&
+                             _coralController.HasPiece())
                     {
+                        // Start placing coroutine - must have piece to place
+                        _isPlacingCoral = true;
                         StartCoroutine(PlaceCoral());
-                    }
-                    else if (_isPlacingCoral)
-                    {
-                        // Maintain place position after coral is released
-                        switch (LastSetpoint)
-                        {
-                            case ReefscapeSetpoints.L4:
-                                SetSetpoint(l4PlaceSetpoint);
-                                break;
-                            case ReefscapeSetpoints.L3:
-                                SetSetpoint(l3PlaceSetpoint);
-                                break;
-                            case ReefscapeSetpoints.L2:
-                                SetSetpoint(l2PlaceSetpoint);
-                                break;
-                        }
                     }
                     break;
                 case ReefscapeSetpoints.L1:
@@ -318,15 +372,51 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                     throw new System.ArgumentOutOfRangeException();
             }
 
-            OPIntakeSequence();
+            // Gate OPIntakeSequence - don't run while in Place or hold locked
+            if (!inPlace && !holdLock)
+            {
+                OPIntakeSequence();
+            }
+            
             UpdateSetpoints();
         }
 
         private IEnumerator PlaceCoral()
         {
-            _isPlacingCoral = true;
+            ApplyPlaceSetpoint();
 
-            // Set place setpoint based on LastSetpoint
+            // Wait for arm to reach target angle before releasing
+            yield return new WaitUntil(() =>
+                Mathf.Abs(Utils.WrapAngle180(armJoint.GetSingleAxisAngle(JointAxis.X)) - targetArmAngle) <= _delay);
+
+            // Wait for release to complete (like HightideV2 reference)
+            if (LastSetpoint != ReefscapeSetpoints.L1)
+            {
+                yield return new WaitUntil(() => _coralController.ReleaseGamePieceWithForce(FacingReef
+                    ? new Vector3(0, -1.5f, 2.5f)
+                    : new Vector3(0, 1.5f, -2.5f)));
+            }
+            else
+            {
+                yield return new WaitUntil(() => _coralController.ReleaseGamePieceWithForce(new Vector3(2.5f, 0, 0)));
+            }
+
+            // Reset placing flag after release completes
+            _isPlacingCoral = false;
+            
+            // Ignore intake + intake sequence briefly after placing
+            _ignoreIntakeUntil = Time.time + 0.35f;
+            
+            // Set place lock for brief post-release hold
+            _placeLock = true;
+            _placeLockUntil = Time.time + 0.25f;
+            
+            // Transition to Stow and stay there
+            SetState(ReefscapeSetpoints.Stow);
+        }
+
+        private void ApplyPlaceSetpoint()
+        {
             switch (LastSetpoint)
             {
                 case ReefscapeSetpoints.L4:
@@ -338,21 +428,6 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                 case ReefscapeSetpoints.L2:
                     SetSetpoint(l2PlaceSetpoint);
                     break;
-            }
-
-            // Wait for arm to reach target angle before releasing
-            yield return new WaitUntil(() =>
-                Mathf.Abs(Utils.WrapAngle180(armJoint.GetSingleAxisAngle(JointAxis.X)) - targetArmAngle) <= _delay);
-
-            if (LastSetpoint != ReefscapeSetpoints.L1)
-            {
-                _coralController.ReleaseGamePieceWithForce(FacingReef
-                    ? new Vector3(0, -1.5f, 2.5f)
-                    : new Vector3(0, 1.5f, -2.5f));
-            }
-            else
-            {
-                _coralController.ReleaseGamePieceWithForce(new Vector3(0, -2f, 0));
             }
         }
 
@@ -366,17 +441,20 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
 
         private void OPIntakeSequence()
         {
+            // Don't touch coral controller during Place/placing - MUST be first check
+            if (CurrentSetpoint == ReefscapeSetpoints.Place || _isPlacingCoral)
+                return;
+
+            // Refuse to run during cooldown after placing
+            if (Time.time < _ignoreIntakeUntil)
+                return;
+
             if (!IntakeAction.IsPressed())
             {
                 _intakeSequenceRunning = false;
                 if (!_coralController.HasPiece())
                 {
                     _disruptable = true;
-                    // Reset placing flag when intake is released and no coral
-                    if (_isPlacingCoral)
-                    {
-                        _isPlacingCoral = false;
-                    }
                 }
             }
 
@@ -386,6 +464,10 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                 if (CurrentSetpoint != ReefscapeSetpoints.HighAlgae && CurrentSetpoint != ReefscapeSetpoints.LowAlgae &&
                     CurrentSetpoint != ReefscapeSetpoints.Barge && CurrentSetpoint != ReefscapeSetpoints.Place)
                 {
+                    // Additional guard: block coral intake requests while in Place
+                    if (CurrentSetpoint == ReefscapeSetpoints.Place || _isPlacingCoral)
+                        return;
+                    
                     bool hasAlgae = _algaeController.HasPiece();
                     _coralController.RequestIntake(coralIntake, IntakeAction.IsPressed());
 
@@ -399,6 +481,10 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                         targetElevatorHeight = hasAlgae ? targetElevatorHeight : stowSetpoint.elevatorHeight;
                         targetIntakeAngle = coralIntakeSetpoint.intakeAngle;
 
+                        // Additional guard: block SetTargetState while in Place
+                        if (CurrentSetpoint == ReefscapeSetpoints.Place || _isPlacingCoral)
+                            return;
+                        
                         _coralController.SetTargetState(_coralController.currentStateNum switch
                         {
                             0 => coralIntakeState,
@@ -434,7 +520,11 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
                             if (elevatorAtCoralGrab && _coralController.atTarget &&
                                 Mathf.Approximately(targetElevatorHeight, coralIntakeSetpoint.elevatorHeight))
                             {
-                                _coralController.SetTargetState(coralArmStowState);
+                                // Additional guard: block SetTargetState while in Place
+                                if (CurrentSetpoint != ReefscapeSetpoints.Place && !_isPlacingCoral)
+                                {
+                                    _coralController.SetTargetState(coralArmStowState);
+                                }
                             }
                         }
 
