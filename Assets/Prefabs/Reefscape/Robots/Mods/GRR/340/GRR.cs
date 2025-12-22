@@ -22,10 +22,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         [SerializeField] private GenericElevator elevator;
         [SerializeField] private GenericJoint climber;
+        [SerializeField] private BoxCollider intakeCollider;
         [SerializeField] private GenericRoller[] funnelRollers;
-
-        [Header("Roller Settings")] [SerializeField]
-        private float rollerSpeed = 500f;
 
         [Header("PID Constants")] [SerializeField]
         private PidConstants wristPIDMI;
@@ -55,8 +53,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         [Header("Game Piece States")] [SerializeField]
         private string currentState;
 
-        [SerializeField] private GamePieceState coralIntakeState;
-        [SerializeField] private GamePieceState coralStowState;
+        [SerializeField] private GamePieceState stowState;
 
         [Header("Target Positions")] [SerializeField]
         private float targetWristAngle;
@@ -85,17 +82,11 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             
             _previousSetpoint = ReefscapeSetpoints.Stow;
 
-            RobotGamePieceController.SetPreload(coralStowState);
+            RobotGamePieceController.SetPreload(stowState);
             coralController = RobotGamePieceController.GetPieceByName(ReefscapeGamePieceType.Coral.ToString());
 
-            coralController.gamePieceStates = new[] { coralIntakeState, coralStowState };
+            coralController.gamePieceStates = new[] { stowState };
             coralController.intakes.Add(coralIntakeComponent);
-
-            // Set initial roller speed
-            foreach (var roller in funnelRollers)
-            {
-                roller.SetAngularVelocity(rollerSpeed);
-            }
 
             alreadyPlaced = false;
         }
@@ -108,9 +99,12 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         private void FixedUpdate()
         {
-            if (coralController == null)
+            if (coralController.HasPiece())
             {
-                return;
+                foreach (var roller in funnelRollers)
+                {
+                    roller.flipVelocity();
+                }
             }
 
             var readState = coralController.GetCurrentState();
@@ -126,63 +120,16 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
             if (BaseGameManager.Instance.RobotState == RobotState.Disabled)
             {
-                // Stop rollers when disabled
-                if (funnelRollers != null)
-                {
-                    foreach (var roller in funnelRollers)
-                    {
-                        if (roller != null)
-                        {
-                            roller.stopAngularVelocity();
-                        }
-                    }
-                }
                 return;
             }
 
-            // Control roller speed based on intake state
-            bool isIntaking = (CurrentSetpoint == ReefscapeSetpoints.Intake || 
-                             CurrentSetpoint == ReefscapeSetpoints.L1 || 
-                             CurrentSetpoint == ReefscapeSetpoints.L2 || 
-                             CurrentSetpoint == ReefscapeSetpoints.L3 || 
-                             CurrentSetpoint == ReefscapeSetpoints.L4) && 
-                             IntakeAction.IsPressed();
-
-            if (funnelRollers != null)
+            if (CurrentSetpoint == ReefscapeSetpoints.Intake)
             {
-                if (coralController.HasPiece())
-                {
-                    // Flip velocity when holding a piece
-                    foreach (var roller in funnelRollers)
-                    {
-                        if (roller != null)
-                        {
-                            roller.flipVelocity();
-                        }
-                    }
-                }
-                else if (isIntaking)
-                {
-                    // Set normal intake speed when intaking
-                    foreach (var roller in funnelRollers)
-                    {
-                        if (roller != null)
-                        {
-                            roller.SetAngularVelocity(rollerSpeed);
-                        }
-                    }
-                }
-                else
-                {
-                    // Stop rollers when not intaking
-                    foreach (var roller in funnelRollers)
-                    {
-                        if (roller != null)
-                        {
-                            roller.stopAngularVelocity();
-                        }
-                    }
-                }
+                intakeCollider.enabled = true;
+            }
+            else
+            {
+                intakeCollider.enabled = false;
             }
 
             switch (CurrentSetpoint)
@@ -199,12 +146,12 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                         SetSetpoint(stow);
                     }
 
-                    coralController.SetTargetState(coralStowState);
+                    coralController.SetTargetState(stowState);
                     break;
                 case ReefscapeSetpoints.Intake:
                     bool isCoral = CurrentRobotMode == ReefscapeRobotMode.Coral;
 
-                    coralController.SetTargetState(coralIntakeState);
+                    coralController.SetTargetState(stowState);
                     coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed() && isCoral);
                     break;
                 case ReefscapeSetpoints.Place:
@@ -276,7 +223,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 case ReefscapeSetpoints.Climbed:
                     SetSetpoint(climbed);
                     targetClimberAngle = climbed.climberTarget;
-                    coralController.SetTargetState(coralStowState);
+                    coralController.SetTargetState(stowState);
                     break;
                 default:
                     throw new System.ArgumentOutOfRangeException();
