@@ -41279,11 +41279,11 @@ MonoBehaviour:
   drivetrainParent: {fileID: 4429329467442726157}
   wheelDiameter: 4
   maxSpeed:
-    _obfuscationKey: 1789827438
-    _encryptedValue: 725522798
+    _obfuscationKey: 627843956
+    _encryptedValue: 1692410740
   accelerationForce:
-    _obfuscationKey: 788853147
-    _encryptedValue: 1847914907
+    _obfuscationKey: 2080817035
+    _encryptedValue: 1024901003
   falloffPercent: 0.075
   falloffExponent: 10
   steerMultiplier: 1.25
