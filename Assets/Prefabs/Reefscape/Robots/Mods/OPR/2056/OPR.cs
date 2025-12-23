@@ -68,7 +68,7 @@ namespace Prefabs.Reefscape.Robots.Mods.OPR._2056
         [SerializeField] private GamePieceState algaeIntakeState;
 
         [Header("Intake Wheels")]
-        [SerializeField] private float intakeWheelSpeed = 300f;
+        [SerializeField] private float intakeWheelSpeed = 000f;
 
         [Header("Target Positions")]
         [SerializeField] private float targetArmAngle;

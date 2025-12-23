@@ -41279,11 +41279,11 @@ MonoBehaviour:
   drivetrainParent: {fileID: 4429329467442726157}
   wheelDiameter: 4
   maxSpeed:
-    _obfuscationKey: 1181901701
-    _encryptedValue: 133981061
+    _obfuscationKey: 1789827438
+    _encryptedValue: 725522798
   accelerationForce:
-    _obfuscationKey: 1747769714
-    _encryptedValue: 690805106
+    _obfuscationKey: 788853147
+    _encryptedValue: 1847914907
   falloffPercent: 0.075
   falloffExponent: 10
   steerMultiplier: 1.25
@@ -41458,16 +41458,16 @@ MonoBehaviour:
   - {fileID: 2481639776060915114}
   intakeWheels: []
   armPidConstants:
-    kP: 0.4
+    kP: 0.45
     kI: 0
     kD: 0.00001
-    Max: 5
+    Max: 7.5
     Isaturation: 1
   intakePidConstants:
     kP: 2
     kI: 0
-    kD: 0.00001
-    Max: 8
+    kD: 0
+    Max: 8.75
     Isaturation: 1
   climberPidConstants:
     kP: 1
@@ -41504,28 +41504,28 @@ MonoBehaviour:
   coralIntakeState:
     name: coralIntakeState
     stateNum: 1
-    stateMoveSpeed: 60
+    stateMoveSpeed: 100
     stateTarget: {fileID: 8300593314497958150}
     smoothHandoff: 1
     angularSpeed: 0.001
   coralSecondSetpointState:
     name: coralSecondSetpointState
     stateNum: 2
-    stateMoveSpeed: 60
+    stateMoveSpeed: 100
     stateTarget: {fileID: 5716375267689659931}
     smoothHandoff: 1
     angularSpeed: 0.001
   coralThirdSetpointState:
     name: coralThirdSetpointState
     stateNum: 3
-    stateMoveSpeed: 60
+    stateMoveSpeed: 90
     stateTarget: {fileID: 548128498915572153}
     smoothHandoff: 1
     angularSpeed: 360
   coralFourthSetpointState:
     name: coralFourthSetpointState
     stateNum: 4
-    stateMoveSpeed: 60
+    stateMoveSpeed: 85
     stateTarget: {fileID: 854355715748862860}
     smoothHandoff: 0
     angularSpeed: 360
@@ -41557,7 +41557,7 @@ MonoBehaviour:
     stateTarget: {fileID: 4251480903197083482}
     smoothHandoff: 1
     angularSpeed: 0
-  intakeWheelSpeed: 1000
+  intakeWheelSpeed: 1500
   targetArmAngle: 0
   targetElevatorHeight: 0
   targetIntakeAngle: 0
@@ -41579,10 +41579,10 @@ MonoBehaviour:
   - {fileID: 4642066507549103364}
   elevatorType: 1
   pidConstants:
-    kP: 15
+    kP: 13
     kI: 0
-    kD: 0.1
-    Max: 3
+    kD: 0.2
+    Max: 3.2
     Isaturation: 1
   stagesPidConstants:
     kP: 100
@@ -41648,10 +41648,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drivePID:
-    kP: 18.5
+    kP: 20
     kI: 0
-    kD: 1.5
-    Max: 0.9
+    kD: 1
+    Max: 1
     Isaturation: 1
   rotatePID:
     kP: 0.08
@@ -41662,7 +41662,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 4.2}
   rotation: 0
   enableForwardAlign: 1
-  enableBackwardsAlign: 1
+  enableBackwardsAlign: 0
   maxAlignDistanceFeet: 10
 --- !u!114 &-7580194406061437170
 MonoBehaviour:
@@ -51564,10 +51564,10 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3780627291550842698}
   serializedVersion: 4
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_AngularDrag: 0.0001
+  m_CenterOfMass: {x: 0, y: 0.3112, z: -0.33017}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:

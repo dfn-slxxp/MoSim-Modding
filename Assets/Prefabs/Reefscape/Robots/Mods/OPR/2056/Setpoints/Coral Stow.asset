@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   armAngle: 0
   elevatorHeight: 3
-  intakeAngle: 0
+  intakeAngle: 15
   climberAngle: 0
   noWrapAngle: 360
