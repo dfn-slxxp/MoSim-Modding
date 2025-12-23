@@ -22,7 +22,6 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         [SerializeField] private GenericElevator elevator;
         [SerializeField] private GenericJoint climber;
-        [SerializeField] private BoxCollider intakeCollider;
         [SerializeField] private GenericRoller[] funnelRollers;
 
         [Header("PID Constants")] [SerializeField]
@@ -99,7 +98,9 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         private void FixedUpdate()
         {
-            if (coralController.HasPiece())
+            bool hasCoral = coralController.HasPiece();
+            
+            if (hasCoral)
             {
                 foreach (var roller in funnelRollers)
                 {
@@ -123,19 +124,9 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 return;
             }
 
-            if (CurrentSetpoint == ReefscapeSetpoints.Intake)
-            {
-                intakeCollider.enabled = true;
-            }
-            else
-            {
-                intakeCollider.enabled = false;
-            }
-
             switch (CurrentSetpoint)
             {
                 case ReefscapeSetpoints.Stow:
-                    bool hasCoral = coralController.HasPiece();
 
                     if (hasCoral)
                     {
@@ -149,10 +140,13 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     coralController.SetTargetState(stowState);
                     break;
                 case ReefscapeSetpoints.Intake:
-                    bool isCoral = CurrentRobotMode == ReefscapeRobotMode.Coral;
+                    SetSetpoint(coralIntake);
+                    coralController.RequestIntake(coralIntakeComponent, CurrentRobotMode == ReefscapeRobotMode.Coral && !hasCoral);
 
-                    coralController.SetTargetState(stowState);
-                    coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed() && isCoral);
+                    if (hasCoral)
+                    {
+                        SetRobotMode(ReefscapeRobotMode.Coral);
+                    }
                     break;
                 case ReefscapeSetpoints.Place:
                     if (!alreadyPlaced && OuttakeAction.triggered)
