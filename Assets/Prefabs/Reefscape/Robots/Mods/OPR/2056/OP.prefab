@@ -9981,7 +9981,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 785406739467366544}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -41464,9 +41464,9 @@ MonoBehaviour:
     Max: 7.5
     Isaturation: 1
   intakePidConstants:
-    kP: 2
+    kP: 1.4
     kI: 0
-    kD: 0
+    kD: 0.5
     Max: 8.75
     Isaturation: 1
   climberPidConstants:
