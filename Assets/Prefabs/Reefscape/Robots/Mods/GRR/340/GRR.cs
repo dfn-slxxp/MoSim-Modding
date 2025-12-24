@@ -135,6 +135,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 return;
             }
 
+            HandleCoralIntakeSequence();
+
             switch (CurrentSetpoint)
             {
                 case ReefscapeSetpoints.Stow:
@@ -253,6 +255,23 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             climber.SetTargetAngle(targetClimberAngle).withAxis(JointAxis.Z).flipDirection();
         }
 
+        private void HandleCoralIntakeSequence()
+        {
+            if (IntakeAction.IsPressed())
+            {
+                bool hasCoral = coralController.HasPiece();
+                
+                if (hasCoral)
+                {
+                    coralController.SetTargetState(coralStowState);
+                }
+                else
+                {
+                    coralController.SetTargetState(coralIntakeState);
+                }
+            }
+        }
+
         private IEnumerator PlacePiece()
         {
             switch (LastSetpoint)
@@ -278,7 +297,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 if (LastSetpoint == ReefscapeSetpoints.L4 || LastSetpoint == ReefscapeSetpoints.Barge)
                 {
                     time = 0.5f;
-                    force = new Vector3(0, 0.35f, 5f);
+                    force = new Vector3(0, 0.4f, 5f);
                 }
                 else if (LastSetpoint == ReefscapeSetpoints.L1)
                 {
