@@ -1,6 +1,4 @@
-using System;
 using Games.Reefscape.Robots;
-using MoSimCore.Enums;
 using RobotFramework.Controllers.Drivetrain;
 using UnityEngine;
 
@@ -38,8 +36,10 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         private DriveController _driveController;
         private ReefscapeRobotBase _base;
         private bool _usePerspective;
-        private Vector2 _reef;
+        private Vector2 _blueReef;
+        private Vector2 _redReef;
 
+        private float _reefDistance = 0f;
         private bool _left = true;
         private bool _inPosition = false;
         private bool _fallingEdge = false;
@@ -50,11 +50,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             _driveController = gameObject.GetComponent<DriveController>();
             _base = gameObject.GetComponent<ReefscapeRobotBase>();
             _usePerspective = PlayerPrefs.GetInt("PerspectiveAutoAlign", 1) == 1;
-            _reef = Vec3ToVec2(
-                (_base.Alliance == Alliance.Blue ? GameObject.Find("BlueReef") : GameObject.Find("RedReef"))
-                    .transform
-                    .position
-            );
+            _blueReef = Vec3ToVec2(GameObject.Find("BlueReef").transform.position);
+            _redReef = Vec3ToVec2(GameObject.Find("RedReef").transform.position);
         }
 
         protected void FixedUpdate()
@@ -62,18 +59,23 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             var max_v = maxVelocity * FT_TO_M;
             var max_a = maxDeceleration * FT_TO_M;
 
+            var robot = Vec3ToVec2(_base.transform.position);
             bool c_l = _base.AutoAlignLeftAction.IsPressed();
             bool pressed = c_l || _base.AutoAlignRightAction.IsPressed();
             bool cm_f = _base.GetActiveCamera().transform.forward.x < 0;
 
-            var robot = Vec3ToVec2(_base.transform.position);
-            var face = Rotate2((_reef - robot).normalized, SIXTH_PI);
+            float blueDistance = (_blueReef - robot).magnitude;
+            float redDistance = (_redReef - robot).magnitude;
+            var reef = blueDistance < redDistance ? _blueReef : _redReef;
+            _reefDistance = Mathf.Min(blueDistance, redDistance);
+
+            var face = Rotate2((reef - robot).normalized, SIXTH_PI);
             float rk_w = Mathf.Floor(Mathf.Atan2(face.y, face.x) / THIRD_PI) * THIRD_PI;
-            _left = !_usePerspective ? c_l : cm_f ^ (Math.Abs(rk_w) < HALF_PI) ^ !c_l; 
+            _left = !_usePerspective ? c_l : cm_f ^ (Mathf.Abs(rk_w) < HALF_PI) ^ !c_l; 
 
             bool waiting = Time.time < _waitUntil;
             float rk_x = x + (waiting ? avoidDistance : 0f);
-            var pole = Pole(rk_x, rk_w, _left);
+            var pole = Pole(rk_x, rk_w, _left, reef);
             var error = pole - robot;
 
             _inPosition = error.magnitude < positionTolerance && !waiting;
@@ -89,7 +91,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
                 var force = error.normalized;
 
-                var att = Pole(SL, rk_w, _left) - pole;
+                var att = Pole(SL, rk_w, _left, reef) - pole;
                 var proj = Rotate2(robot - pole, -Mathf.Atan2(att.y, att.x));
                 if (proj.x > 0.0 && proj.x < SL - rk_x)
                 {
@@ -109,9 +111,9 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             }
         }
 
-        private Vector2 Pole(float x, float angle, bool left)
+        private Vector2 Pole(float x, float angle, bool left, Vector2 reef)
         {
-            return _reef + Rotate2(new Vector2(-x, y * (left ? 1f : -1f)), angle);
+            return reef + Rotate2(new Vector2(-x, y * (left ? 1f : -1f)), angle);
         }
 
         private Vector2 Rotate2(Vector2 v, float radians)
@@ -124,6 +126,11 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         private Vector2 Vec3ToVec2(Vector3 vec3)
         {
             return new Vector2(vec3.x, vec3.z);
+        }
+
+        public float ReefDistance()
+        {
+            return _reefDistance;
         }
 
         public bool Left()

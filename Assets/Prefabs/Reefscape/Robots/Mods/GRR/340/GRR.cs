@@ -1,12 +1,9 @@
-using System;
 using System.Collections;
 using Games.Reefscape.Enums;
-using Games.Reefscape.FieldScripts;
 using Games.Reefscape.GamePieceSystem;
 using Games.Reefscape.Robots;
 using MoSimCore.BaseClasses.GameManagement;
 using MoSimCore.Enums;
-using MoSimLib;
 using RobotFramework.Components;
 using RobotFramework.Controllers.GamePieceSystem;
 using RobotFramework.Controllers.PidSystems;
@@ -29,6 +26,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         [SerializeField] private PidConstants climberPID;
 
         [Header("Setpoints")]
+        [SerializeField] private float safeDistance = 1.6f;
         [SerializeField] private GRRSetpoint stow;
         [SerializeField] private GRRSetpoint coralIntake;
         [SerializeField] private GRRSetpoint coralStow;
@@ -65,7 +63,6 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode _coralController;
 
         private bool _alreadyPlaced = false;
-        private int _intakeEnum = 0;
 
         private float _wristAngle;
         private float _elevatorDistance;
@@ -110,6 +107,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
             bool hasCoral = _coralController.HasPiece();
             bool autoPlace = autoAlign.InPosition();
+            bool safe = autoAlign.ReefDistance() >= safeDistance;
+
             if (autoPlace)
             {
                 SetState(ReefscapeSetpoints.Place);
@@ -128,20 +127,16 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     break;
                 case ReefscapeSetpoints.Stow:
                 case ReefscapeSetpoints.Intake:
-                    SetSetpoint(stow);
-                    SetSetpoint(coralStow);
-                    SetSetpoint(coralIntake);
-
                     if (!hasCoral)
                     {
                         _coralController.SetTargetState(coralIntakeState);
                         _coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
-                        SetSetpoint(IntakeAction.IsPressed() ? coralIntake : stow);
+                        if (safe) SetSetpoint(IntakeAction.IsPressed() ? coralIntake : stow);
                     }
                     else
                     {
                         if (IntakeAction.IsPressed()) _coralController.SetTargetState(coralStowState);
-                        SetSetpoint(!_coralController.atTarget ? coralIntake : coralStow);
+                        if (safe) SetSetpoint(!_coralController.atTarget ? coralIntake : coralStow);
                     }
             
                     if (!_coralController.atTarget && IntakeAction.IsPressed())
@@ -157,6 +152,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     }
 
                     SetWheelSpeeds(-gooseAnimationWheelSpeed, 0);
+                    if (_alreadyPlaced && safe) SetSetpoint(stow);
                     break;
                 case ReefscapeSetpoints.L1:
                     SetSetpoint(autoAlign.Left() ? l1Left : l1Right);
