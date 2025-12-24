@@ -66,6 +66,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode coralController;
 
         private ReefscapeSetpoints _previousSetpoint;
+        private GRRAutoAlign _autoAlign;
         private bool alreadyPlaced;
 
         protected override void Start()
@@ -87,6 +88,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             coralController.gamePieceStates = new[] { stowState };
             coralController.intakes.Add(coralIntakeComponent);
 
+            _autoAlign = gameObject.GetComponent<GRRAutoAlign>();
+
             alreadyPlaced = false;
         }
 
@@ -98,6 +101,12 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         private void FixedUpdate()
         {
+            bool autoPlace = _autoAlign.InPosition();
+            if (autoPlace)
+            {
+                SetState(ReefscapeSetpoints.Place);
+            }
+
             bool hasCoral = coralController.HasPiece();
             
             if (hasCoral)
@@ -149,7 +158,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     }
                     break;
                 case ReefscapeSetpoints.Place:
-                    if (!alreadyPlaced && OuttakeAction.triggered)
+                    if (!alreadyPlaced && (OuttakeAction.triggered || autoPlace))
                     {
                         StartCoroutine(PlacePiece());
                     }
@@ -259,14 +268,14 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             //default mode is impulse
             if (CurrentRobotMode == ReefscapeRobotMode.Coral && coralController.HasPiece())
             {
-                var time = 0.01f;
+                var time = 0.5f;
                 Vector3 force = new Vector3(0, 0, 5f);
                 var maxSpeed = 0.5f;
 
                 if (LastSetpoint == ReefscapeSetpoints.L4 || LastSetpoint == ReefscapeSetpoints.Barge)
                 {
-                    time = 0.15f;
-                    force = new Vector3(0, 1, 5f);
+                    time = 0.5f;
+                    force = new Vector3(0, 0.5f, 6f);
                 }
                 else if (LastSetpoint == ReefscapeSetpoints.L1)
                 {
