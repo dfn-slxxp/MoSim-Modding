@@ -70,6 +70,11 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         
         [SerializeField] private float intakeWheelSpeed = 300f;
 
+        [Header("Funnel Animation")] [SerializeField]
+        private GenericAnimationJoint[] funnelAnimationWheels;
+        
+        [SerializeField] private float funnelAnimationSpeed = 300f;
+
         private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode coralController;
 
         private ReefscapeSetpoints _previousSetpoint;
@@ -270,9 +275,25 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             if (_isPlacing || CurrentSetpoint == ReefscapeSetpoints.Place)
             {
                 // Don't run intake animation while placing/scoring
-                foreach (var intakeWheel in intakeWheels)
+                if (intakeWheels != null)
                 {
-                    intakeWheel.VelocityRoller(0);
+                    foreach (var intakeWheel in intakeWheels)
+                    {
+                        if (intakeWheel != null)
+                        {
+                            intakeWheel.VelocityRoller(0);
+                        }
+                    }
+                }
+                if (funnelAnimationWheels != null)
+                {
+                    foreach (var funnelWheel in funnelAnimationWheels)
+                    {
+                        if (funnelWheel != null)
+                        {
+                            funnelWheel.VelocityRoller(0);
+                        }
+                    }
                 }
                 return;
             }
@@ -284,9 +305,26 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             if (isAlgaeSetpoint)
             {
                 float direction = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
-                foreach (var intakeWheel in intakeWheels)
+                if (intakeWheels != null)
                 {
-                    intakeWheel.VelocityRoller(intakeWheelSpeed * direction);
+                    foreach (var intakeWheel in intakeWheels)
+                    {
+                        if (intakeWheel != null)
+                        {
+                            intakeWheel.VelocityRoller(intakeWheelSpeed * direction);
+                        }
+                    }
+                }
+                // Funnel animation doesn't run during algae setpoints
+                if (funnelAnimationWheels != null)
+                {
+                    foreach (var funnelWheel in funnelAnimationWheels)
+                    {
+                        if (funnelWheel != null)
+                        {
+                            funnelWheel.VelocityRoller(0);
+                        }
+                    }
                 }
                 return;
             }
@@ -303,17 +341,51 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             if (shouldIntake)
             {
                 float direction = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
-                foreach (var intakeWheel in intakeWheels)
+                if (intakeWheels != null)
                 {
-                    intakeWheel.VelocityRoller(intakeWheelSpeed * direction);
+                    foreach (var intakeWheel in intakeWheels)
+                    {
+                        if (intakeWheel != null)
+                        {
+                            intakeWheel.VelocityRoller(intakeWheelSpeed * direction);
+                        }
+                    }
+                }
+                // Funnel animation runs during intake
+                if (funnelAnimationWheels != null)
+                {
+                    foreach (var funnelWheel in funnelAnimationWheels)
+                    {
+                        if (funnelWheel != null)
+                        {
+                            funnelWheel.VelocityRoller(funnelAnimationSpeed * direction);
+                        }
+                    }
                 }
             }
             else
             {
                 // Stop intake wheels when conditions aren't met (unless we're in algae setpoint)
-                foreach (var intakeWheel in intakeWheels)
+                if (intakeWheels != null)
                 {
-                    intakeWheel.VelocityRoller(0);
+                    foreach (var intakeWheel in intakeWheels)
+                    {
+                        if (intakeWheel != null)
+                        {
+                            intakeWheel.VelocityRoller(0);
+                        }
+                    }
+                }
+                // Stop funnel animation when not intaking
+                if (funnelAnimationWheels != null)
+                {
+                    foreach (var funnelWheel in funnelAnimationWheels)
+                    {
+                        if (funnelWheel != null)
+                        {
+                            funnelWheel.VelocityRoller(0);
+                        }
+                    }
                 }
             }
         }
