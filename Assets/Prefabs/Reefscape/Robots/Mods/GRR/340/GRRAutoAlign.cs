@@ -1,3 +1,4 @@
+using System;
 using Games.Reefscape.Robots;
 using MoSimCore.Enums;
 using RobotFramework.Controllers.Drivetrain;
@@ -14,11 +15,17 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         [Tooltip("The offset in the Y direction from the reef's center for the robot to target (Always positive)")]
         public float y = 0.17f;
 
+        [Header("Wildlife Protection Program")]
+        [Tooltip("Additional distance to add to the X offset for avoiding the reef while the robot's superstructure is preparing to score")]
+        public float avoidDistance = 0.18f;
+        [Tooltip("The amount of time in seconds to avoid the reef for while the robot's superstructure is preparing to score")]
+        public float avoidTime = 0.36f;
+
         [Header("Translation")]
         [Tooltip("The configured maximum velocity of the robot, in ft/s")]
         public float maxVelocity = 16.0f;
         [Tooltip("The maximum deceleration of the auto-align controller, in ft/s/s")]
-        public float maxDeceleration = 28.0f;
+        public float maxDeceleration = 29.0f;
         [Tooltip("Arbitrary strength force for centering the robot on the targeted reef pole")]
         public float strength = 400f;
         [Tooltip("The tolerance at which the controller signals that the robot is in position")]
@@ -30,15 +37,19 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         private DriveController _driveController;
         private ReefscapeRobotBase _base;
+        private bool _usePerspective;
         private Vector2 _reef;
 
-        private bool _inPosition;
-        private bool _fallingEdge;
+        private bool _left = true;
+        private bool _inPosition = false;
+        private bool _fallingEdge = false;
+        private float _waitUntil = 0f;
 
         protected void Start()
         {
             _driveController = gameObject.GetComponent<DriveController>();
             _base = gameObject.GetComponent<ReefscapeRobotBase>();
+            _usePerspective = PlayerPrefs.GetInt("PerspectiveAutoAlign", 1) == 1;
             _reef = Vec3ToVec2(
                 (_base.Alliance == Alliance.Blue ? GameObject.Find("BlueReef") : GameObject.Find("RedReef"))
                     .transform
@@ -51,20 +62,24 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             var max_v = maxVelocity * FT_TO_M;
             var max_a = maxDeceleration * FT_TO_M;
 
-            bool left = _base.AutoAlignLeftAction.IsPressed();
-            bool right = _base.AutoAlignRightAction.IsPressed();
+            bool c_l = _base.AutoAlignLeftAction.IsPressed();
+            bool pressed = c_l || _base.AutoAlignRightAction.IsPressed();
+            bool cm_f = _base.GetActiveCamera().transform.forward.x < 0;
 
             var robot = Vec3ToVec2(_base.transform.position);
             var face = Rotate2((_reef - robot).normalized, SIXTH_PI);
-
             float rk_w = Mathf.Floor(Mathf.Atan2(face.y, face.x) / THIRD_PI) * THIRD_PI;
-            var pole = Pole(x, rk_w, left);
+            _left = !_usePerspective ? c_l : cm_f ^ (Math.Abs(rk_w) < HALF_PI) ^ !c_l; 
+
+            bool waiting = Time.time < _waitUntil;
+            float rk_x = x + (waiting ? avoidDistance : 0f);
+            var pole = Pole(rk_x, rk_w, _left);
             var error = pole - robot;
 
-            _inPosition = error.magnitude < positionTolerance;
-            _fallingEdge = (left || right) && (_fallingEdge || _inPosition);
+            _inPosition = error.magnitude < positionTolerance && !waiting;
+            _fallingEdge = pressed && (_fallingEdge || _inPosition);
 
-            if (!_fallingEdge && (left || right))
+            if (!_fallingEdge && pressed)
             {
                 float k = 1f;
                 if (error.magnitude < max_v * max_v / (2f * max_a))
@@ -74,9 +89,9 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
                 var force = error.normalized;
 
-                var att = Pole(SL, rk_w, left) - pole;
+                var att = Pole(SL, rk_w, _left) - pole;
                 var proj = Rotate2(robot - pole, -Mathf.Atan2(att.y, att.x));
-                if (proj.x > 0.0 && proj.x < SL - x)
+                if (proj.x > 0.0 && proj.x < SL - rk_x)
                 {
                     float t = Mathf.Abs(proj.y) / SW / 2f;
                     float m = -ST * t * t * Mathf.Sign(proj.y);
@@ -87,6 +102,10 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 float alpha = rotateKp * ((rk_w - yaw + THREE_PI) % TWO_PI - Mathf.PI);
 
                 _driveController.overideInput(force.normalized * k, alpha, DriveController.DriveMode.FieldOriented);
+            }
+            else
+            {
+                _waitUntil = Time.time + avoidTime;
             }
         }
 
@@ -107,6 +126,11 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             return new Vector2(vec3.x, vec3.z);
         }
 
+        public bool Left()
+        {
+            return _left;
+        }
+
         public bool InPosition()
         {
             return _inPosition;
@@ -118,6 +142,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         private const float FT_TO_M = 0.3048f;
         private const float SIXTH_PI = Mathf.PI / 6f;
         private const float THIRD_PI = Mathf.PI / 3f;
+        private const float HALF_PI = Mathf.PI / 2f;
         private const float TWO_PI = Mathf.PI * 2f;
         private const float THREE_PI = Mathf.PI * 3f;
     }

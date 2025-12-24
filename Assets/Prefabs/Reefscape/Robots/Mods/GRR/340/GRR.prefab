@@ -72436,7 +72436,8 @@ MonoBehaviour:
   coralIntake: {fileID: 11400000, guid: 350ab1ca4b8613a4da73528e884b3ee1, type: 2}
   stow: {fileID: 11400000, guid: d514a2d7736fe784a8a8e20f1b52aeb9, type: 2}
   coralStow: {fileID: 11400000, guid: dc702507740eda940a777586f5fed462, type: 2}
-  l1: {fileID: 11400000, guid: 9159826c13c887e43960ceed26dc28ed, type: 2}
+  l1Left: {fileID: 11400000, guid: 9159826c13c887e43960ceed26dc28ed, type: 2}
+  l1Right: {fileID: 11400000, guid: 06f5e00502901834db08aa40016206a4, type: 2}
   l2: {fileID: 11400000, guid: 59b91f5099a32a743b70e013aa60c226, type: 2}
   l2Place: {fileID: 11400000, guid: 681147d1fe2c4a641a88fe6d7cc32aba, type: 2}
   l3: {fileID: 11400000, guid: 7a53b34afb00bb541a5b61f30093045e, type: 2}
@@ -72668,8 +72669,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 1.3
   y: 0.17
+  avoidDistance: 0.18
+  avoidTime: 0.36
   maxVelocity: 16
-  maxDeceleration: 28
+  maxDeceleration: 29
   strength: 400
   positionTolerance: 0.08
   rotateKp: 1.5

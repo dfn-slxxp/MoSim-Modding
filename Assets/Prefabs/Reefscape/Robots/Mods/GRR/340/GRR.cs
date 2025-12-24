@@ -34,7 +34,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         [SerializeField] private GRRSetpoint stow;
         [SerializeField] private GRRSetpoint coralStow;
-        [SerializeField] private GRRSetpoint l1;
+        [SerializeField] private GRRSetpoint l1Left;
+        [SerializeField] private GRRSetpoint l1Right;
         [SerializeField] private GRRSetpoint l2;
         [SerializeField] private GRRSetpoint l2Place;
         [SerializeField] private GRRSetpoint l3;
@@ -165,7 +166,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     alreadyPlaced = true;
                     break;
                 case ReefscapeSetpoints.L1:
-                    SetSetpoint(l1);
+                    SetSetpoint(_autoAlign.Left() ? l1Left : l1Right);
                     coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
                     break;
                 case ReefscapeSetpoints.Stack:
@@ -279,9 +280,9 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 }
                 else if (LastSetpoint == ReefscapeSetpoints.L1)
                 {
-                    time = 0.15f;
-                    force = new Vector3(0, 0, 0.25f);
-                    maxSpeed = 0.15f;
+                    time = 0.4f;
+                    force = new Vector3(0, 0, 3f);
+                    maxSpeed = 0.25f;
                 }
 
                 coralController.ReleaseGamePieceWithContinuedForce(force, time, maxSpeed);
