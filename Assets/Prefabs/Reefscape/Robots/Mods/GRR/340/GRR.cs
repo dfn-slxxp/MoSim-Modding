@@ -17,22 +17,20 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 {
     public class GRR : ReefscapeRobotBase
     {
-        [Header("Robot Components")] [SerializeField]
-        private GenericJoint wristJoint;
-
+        [Header("Robot Components")]
+        [SerializeField] private GenericJoint wrist;
         [SerializeField] private GenericElevator elevator;
         [SerializeField] private GenericJoint climber;
         [SerializeField] private GenericRoller[] funnelRollers;
 
-        [Header("PID Constants")] [SerializeField]
-        private PidConstants wristPIDMI;
+        [Header("Motion Controllers")]
+        [SerializeField]  private GRRAutoAlign autoAlign;
+        [SerializeField] private PidConstants wristPID;
+        [SerializeField] private PidConstants climberPID;
 
-        [SerializeField] private PidConstants climberPIDMI;
-
-        [Header("Setpoints")] [SerializeField]
-        private GRRSetpoint coralIntake;
-
+        [Header("Setpoints")]
         [SerializeField] private GRRSetpoint stow;
+        [SerializeField] private GRRSetpoint coralIntake;
         [SerializeField] private GRRSetpoint coralStow;
         [SerializeField] private GRRSetpoint l1Left;
         [SerializeField] private GRRSetpoint l1Right;
@@ -47,54 +45,42 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         [SerializeField] private GRRSetpoint climb;
         [SerializeField] private GRRSetpoint climbed;
 
-        [Header("Game Piece Intakes")] [SerializeField]
-        private ReefscapeGamePieceIntake coralIntakeComponent;
-
-        [Header("Game Piece States")] [SerializeField]
-        private string currentState;
-
+        [Header("Game Piece Intakes")]
+        [SerializeField] private ReefscapeGamePieceIntake coralIntakeComponent;
         [SerializeField] private GamePieceState coralIntakeState;
         [SerializeField] private GamePieceState coralStowState;
 
-        [Header("Target Positions")] [SerializeField]
-        private float targetWristAngle;
+        [Header("Audio")]
+        [SerializeField] private AudioSource intakeAudioSource;
+        [SerializeField] private AudioClip intakeAudioClip;
 
-        [SerializeField] private float targetElevatorDistance;
-        [SerializeField] private float targetClimberAngle;
+        [Header("Intake Animation")]
+        [SerializeField] private GenericAnimationJoint[] intakeAnimationWheels;
+        [SerializeField] private float intakeAnimationSpeed = 300f;
 
-        [Header("Audio")] [SerializeField]
-        private AudioSource intakeAudioSource;
-        [SerializeField] private AudioClip intakeClip;
-
-        [Header("Intake Wheels")] [SerializeField]
-        private GenericAnimationJoint[] intakeWheels;
-        
-        [SerializeField] private float intakeWheelSpeed = 300f;
-
-        [Header("Funnel Animation")] [SerializeField]
-        private GenericAnimationJoint[] funnelAnimationWheels;
-        
+        [Header("Funnel Animation")] 
+        [SerializeField] private GenericAnimationJoint[] funnelAnimationWheels;
         [SerializeField] private float funnelAnimationSpeed = 300f;
 
         private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode coralController;
 
-        private ReefscapeSetpoints _previousSetpoint;
-        private GRRAutoAlign _autoAlign;
         private bool alreadyPlaced;
         private bool _isPlacing;
+
+        private float _wristAngle;
+        private float _elevatorDistance;
+        private float _climberAngle;
 
         protected override void Start()
         {
             base.Start();
 
-            wristJoint.SetPid(wristPIDMI);
-            climber.SetPid(climberPIDMI);
+            wrist.SetPid(wristPID);
+            climber.SetPid(climberPID);
 
-            targetWristAngle = coralStow.wristTarget;
-            targetElevatorDistance = 0;
-            targetClimberAngle = stow.climberTarget;
-            
-            _previousSetpoint = ReefscapeSetpoints.Stow;
+            _wristAngle = stow.wristTarget;
+            _elevatorDistance = stow.elevatorDistance;
+            _climberAngle = stow.climberTarget;
 
             RobotGamePieceController.SetPreload(coralStowState);
             coralController = RobotGamePieceController.GetPieceByName(ReefscapeGamePieceType.Coral.ToString());
@@ -102,9 +88,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             coralController.gamePieceStates = new[] { coralIntakeState, coralStowState };
             coralController.intakes.Add(coralIntakeComponent);
 
-            _autoAlign = gameObject.GetComponent<GRRAutoAlign>();
-
-            intakeAudioSource.clip = intakeClip;
+            intakeAudioSource.clip = intakeAudioClip;
             intakeAudioSource.loop = true;
             intakeAudioSource.Stop();
 
@@ -113,13 +97,13 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         private void LateUpdate()
         {
-            wristJoint.UpdatePid(wristPIDMI);
-            climber.UpdatePid(climberPIDMI);
+            wrist.UpdatePid(wristPID);
+            climber.UpdatePid(climberPID);
         }
 
         private void FixedUpdate()
         {
-            bool autoPlace = _autoAlign.InPosition();
+            bool autoPlace = autoAlign.InPosition();
             if (autoPlace)
             {
                 SetState(ReefscapeSetpoints.Place);
@@ -133,12 +117,6 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 {
                     roller.flipVelocity();
                 }
-            }
-
-            var readState = coralController.GetCurrentState();
-            if (readState != null)
-            {
-                currentState = readState.name;
             }
 
             if (CurrentSetpoint != ReefscapeSetpoints.Place)
@@ -191,7 +169,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     alreadyPlaced = true;
                     break;
                 case ReefscapeSetpoints.L1:
-                    SetSetpoint(_autoAlign.Left() ? l1Left : l1Right);
+                    SetSetpoint(autoAlign.Left() ? l1Left : l1Right);
                     coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
                     break;
                 case ReefscapeSetpoints.Stack:
@@ -227,7 +205,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     break;
                 case ReefscapeSetpoints.LowAlgae:
                     SetSetpoint(lowAlgae);
-                    targetClimberAngle = lowAlgae.climberTarget;
+                    _climberAngle = lowAlgae.climberTarget;
                     if (coralController.HasPiece())
                     {
                         coralController.RequestIntake(coralIntakeComponent, false);
@@ -235,7 +213,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     break;
                 case ReefscapeSetpoints.HighAlgae:
                     SetSetpoint(highAlgae);
-                    targetClimberAngle = highAlgae.climberTarget;
+                    _climberAngle = highAlgae.climberTarget;
                     if (coralController.HasPiece())
                     {
                         coralController.RequestIntake(coralIntakeComponent, false);
@@ -246,34 +224,33 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     break;
                 case ReefscapeSetpoints.Climb:
                     SetSetpoint(climb);
-                    targetClimberAngle = climb.climberTarget;
+                    _climberAngle = climb.climberTarget;
                     coralController.RequestIntake(coralIntakeComponent, false);
                     break;
                 case ReefscapeSetpoints.Climbed:
                     SetSetpoint(climbed);
-                    targetClimberAngle = climbed.climberTarget;
+                    _climberAngle = climbed.climberTarget;
                     coralController.SetTargetState(coralStowState);
                     break;
                 default:
                     throw new System.ArgumentOutOfRangeException();
             }
 
-            _previousSetpoint = CurrentSetpoint;
             UpdateSetpoints();
         }
 
         private void SetSetpoint(GRRSetpoint setpoint)
         {
-            targetWristAngle = setpoint.wristTarget;
-            targetElevatorDistance = setpoint.elevatorDistance;
-            targetClimberAngle = setpoint.climberTarget;
+            _wristAngle = setpoint.wristTarget;
+            _elevatorDistance = setpoint.elevatorDistance;
+            _climberAngle = setpoint.climberTarget;
         }
 
         private void UpdateSetpoints()
         {
-            wristJoint.SetTargetAngle(targetWristAngle).withAxis(JointAxis.X).flipDirection();
-            elevator.SetTarget(targetElevatorDistance);
-            climber.SetTargetAngle(targetClimberAngle).withAxis(JointAxis.Z).flipDirection();
+            wrist.SetTargetAngle(_wristAngle).withAxis(JointAxis.X).flipDirection();
+            elevator.SetTarget(_elevatorDistance);
+            climber.SetTargetAngle(_climberAngle).withAxis(JointAxis.Z).flipDirection();
         }
 
         private void UpdateIntakeAnimation()
@@ -281,9 +258,9 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             if (_isPlacing || CurrentSetpoint == ReefscapeSetpoints.Place)
             {
                 // Don't run intake animation while placing/scoring
-                if (intakeWheels != null)
+                if (intakeAnimationWheels != null)
                 {
-                    foreach (var intakeWheel in intakeWheels)
+                    foreach (var intakeWheel in intakeAnimationWheels)
                     {
                         if (intakeWheel != null)
                         {
@@ -311,13 +288,13 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             if (isAlgaeSetpoint)
             {
                 float direction = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
-                if (intakeWheels != null)
+                if (intakeAnimationWheels != null)
                 {
-                    foreach (var intakeWheel in intakeWheels)
+                    foreach (var intakeWheel in intakeAnimationWheels)
                     {
                         if (intakeWheel != null)
                         {
-                            intakeWheel.VelocityRoller(intakeWheelSpeed * direction);
+                            intakeWheel.VelocityRoller(intakeAnimationSpeed * direction);
                         }
                     }
                 }
@@ -347,13 +324,13 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             if (shouldIntake)
             {
                 float direction = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
-                if (intakeWheels != null)
+                if (intakeAnimationWheels != null)
                 {
-                    foreach (var intakeWheel in intakeWheels)
+                    foreach (var intakeWheel in intakeAnimationWheels)
                     {
                         if (intakeWheel != null)
                         {
-                            intakeWheel.VelocityRoller(intakeWheelSpeed * direction);
+                            intakeWheel.VelocityRoller(intakeAnimationSpeed * direction);
                         }
                     }
                 }
@@ -372,9 +349,9 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             else
             {
                 // Stop intake wheels when conditions aren't met (unless we're in algae setpoint)
-                if (intakeWheels != null)
+                if (intakeAnimationWheels != null)
                 {
-                    foreach (var intakeWheel in intakeWheels)
+                    foreach (var intakeWheel in intakeAnimationWheels)
                     {
                         if (intakeWheel != null)
                         {
@@ -471,12 +448,12 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
                 // Outtake animation - reverse direction from intake
                 float currentIntakeDirection = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
-                float outtakeSpeed = -intakeWheelSpeed * currentIntakeDirection;
+                float outtakeSpeed = -intakeAnimationSpeed * currentIntakeDirection;
 
                 float timer = 0;
                 while (timer < time)
                 {
-                    foreach (var wheel in intakeWheels)
+                    foreach (var wheel in intakeAnimationWheels)
                     {
                         wheel.VelocityRoller(outtakeSpeed);
                     }
@@ -484,7 +461,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     yield return null;
                 }
 
-                foreach (var wheel in intakeWheels)
+                foreach (var wheel in intakeAnimationWheels)
                 {
                     wheel.VelocityRoller(0);
                 }

@@ -29482,6 +29482,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1888345027404974318}
   - component: {fileID: 6320189024727769286}
+  - component: {fileID: 5477202686481452341}
   m_Layer: 6
   m_Name: Elevator
   m_TagString: Untagged
@@ -29602,6 +29603,55 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5477202686481452341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2347433499451137764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20cb3794f26a4d04dab8b954d1f65ffa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stages:
+  - {fileID: 1791468384817669339}
+  - {fileID: 2831605994386868463}
+  elevatorType: 0
+  pidConstants:
+    kP: 17
+    kI: 0
+    kD: 0.5
+    Max: 4.25
+    Isaturation: 1
+  stagesPidConstants:
+    kP: 18
+    kI: 0
+    kD: 0.5
+    Max: 4
+    Isaturation: 1
+  elevatorAxis: 1
+  flipped: 0
+  setStageOverrides:
+  - stageNum: 1
+    overrideAxis: 1
+    useStartingOffset: 1
+  stageHeight: 46.5
+  stageOverlap: 0
+  carriageHeight: 0
+  elevatorSound: {fileID: 6320189024727769286}
+  elevatorClip: {fileID: 8300000, guid: 5e511c98579c56741a3dc1a08b38575b, type: 3}
+  minSpeed: 5
+  maxSpeed: 60
+  soundPitchRange: {x: 1, y: 1.05}
+  soundVolumeRange: {x: 0.1, y: 0.3}
+  stageClickClip: {fileID: 8300000, guid: 2a793e95cb27e3145a890e449b9de836, type: 3}
+  clickVolume: 0.1
+  clickSoundCooldown: 0.2
+  topClickOffset: 0.5
+  bottomClickOffset: 10
+  referenceTransform: {fileID: 0}
 --- !u!1 &2349801871760988899
 GameObject:
   m_ObjectHideFlags: 0
@@ -37939,7 +37989,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 421beba0f51efa74ab0050387b64c5a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brakeModeMultiplyer: 1
+  brakeModeMultiplyer: 0.5
   ignoreDisabledMode: 0
   movementAudioClip: {fileID: 8300000, guid: 3438207a3ba053e4ba66b82d6f9108d2, type: 3}
   audioErrorThreshold: 3
@@ -43022,7 +43072,7 @@ GameObject:
   - component: {fileID: 3039939583381403324}
   - component: {fileID: 17081806871417003}
   m_Layer: 6
-  m_Name: Pivot
+  m_Name: Climber Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73948,13 +73998,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2955134354960938623}
   - component: {fileID: 7081453290274049641}
+  - component: {fileID: 5520004873160498783}
   - component: {fileID: 9054878147592654270}
   - component: {fileID: 2689107756292303104}
-  - component: {fileID: 5520004873160498783}
-  - component: {fileID: 7687418991113011009}
-  - component: {fileID: 4930663437931110733}
-  - component: {fileID: 5826695917001789762}
   - component: {fileID: 9108466554636851432}
+  - component: {fileID: 5826695917001789762}
+  - component: {fileID: 7687418991113011009}
   m_Layer: 6
   m_Name: GRR
   m_TagString: BlueRobot
@@ -74010,138 +74059,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &9054878147592654270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6145107239193163244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a05a705efbcae943ab591f8eedb1a3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drivetrainParent: {fileID: 2557646371943964245}
-  wheelDiameter: 4
-  maxSpeed:
-    _obfuscationKey: 546696306
-    _encryptedValue: 1628826738
-  accelerationForce:
-    _obfuscationKey: 740567804
-    _encryptedValue: 1825843964
-  falloffPercent: 0.075
-  falloffExponent: 10
-  steerMultiplier: 1.3
-  speedDebug: 0
-  swerveAudioMixerGroup: {fileID: 4093094553572483033, guid: ed4b10d8b69fb1240aaf15a3cba9d0bd,
-    type: 2}
-  gearAudioResource: {fileID: 8300000, guid: affe685e481d252409ce6efa8d637caa, type: 3}
-  treadAudioResource: {fileID: 8300000, guid: a678915028b06f14a96455d7b29c3fab, type: 3}
-  moveSpeedMultiplier: 0
-  rotationSpeedMultiplier: 0
---- !u!114 &2689107756292303104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6145107239193163244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 378730c768c4163469905bbe63cd7281, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  alliance: 0
-  bumperMeshes: []
-  blueBumperMaterial: {fileID: 2100000, guid: 3856117be8f9d1544bc7dd5bc957d4d6, type: 2}
-  redBumperMaterial: {fileID: 2100000, guid: 8891c8be8334c264dbe596d910db7283, type: 2}
-  <CurrentSetpoint>k__BackingField: 0
-  <CurrentCoralStationMode>k__BackingField:
-    <DropType>k__BackingField: 1
-    <DropDistance>k__BackingField: 1.5
-    <DropStrength>k__BackingField: 4
-    <DropForceVariance>k__BackingField: 0
-    <RotationVariance>k__BackingField: 0
-    <DropOrientation>k__BackingField: 1
-    <RequireIntaking>k__BackingField: 1
-    <TargetTransform>k__BackingField: {fileID: 1881502945100412036}
-    <DrawDebugLines>k__BackingField: 0
-  superCycler: 0
-  wristJoint: {fileID: 7733919198722714855}
-  elevator: {fileID: 4930663437931110733}
-  climber: {fileID: 3039939583381403324}
-  funnelRollers:
-  - {fileID: 4319596422012810142}
-  - {fileID: 468062139124619578}
-  - {fileID: 337320261812508562}
-  - {fileID: 2991557802458181923}
-  - {fileID: 2036557011480280887}
-  - {fileID: 219309480999241993}
-  - {fileID: 3386078307635991215}
-  - {fileID: 6210157049269152545}
-  wristPIDMI:
-    kP: 1
-    kI: 0
-    kD: 0.2
-    Max: 18
-    Isaturation: 1
-  climberPIDMI:
-    kP: 0
-    kI: 0
-    kD: 0
-    Max: 0
-    Isaturation: 0
-  coralIntake: {fileID: 11400000, guid: 350ab1ca4b8613a4da73528e884b3ee1, type: 2}
-  stow: {fileID: 11400000, guid: d514a2d7736fe784a8a8e20f1b52aeb9, type: 2}
-  coralStow: {fileID: 11400000, guid: dc702507740eda940a777586f5fed462, type: 2}
-  l1Left: {fileID: 11400000, guid: 9159826c13c887e43960ceed26dc28ed, type: 2}
-  l1Right: {fileID: 11400000, guid: 06f5e00502901834db08aa40016206a4, type: 2}
-  l2: {fileID: 11400000, guid: 59b91f5099a32a743b70e013aa60c226, type: 2}
-  l2Place: {fileID: 11400000, guid: 681147d1fe2c4a641a88fe6d7cc32aba, type: 2}
-  l3: {fileID: 11400000, guid: 7a53b34afb00bb541a5b61f30093045e, type: 2}
-  l3Place: {fileID: 11400000, guid: f0800aefe82d02f4d9ca66f19e787bca, type: 2}
-  l4: {fileID: 11400000, guid: 7fa1ad62a4e8cc04ebf36a83a0746a28, type: 2}
-  l4Place: {fileID: 11400000, guid: fa4c854d1a43e6a48bbaf93aa5d2873b, type: 2}
-  lowAlgae: {fileID: 11400000, guid: f582eb698da603e4d864eb130fd4268a, type: 2}
-  highAlgae: {fileID: 11400000, guid: e4437b7735f28f24da40f278574b8fcf, type: 2}
-  climb: {fileID: 11400000, guid: 432585d51d4ba224295e07ce7f8be49c, type: 2}
-  climbed: {fileID: 11400000, guid: d43c01617abde2e448dc43b3e3ec2c19, type: 2}
-  coralIntakeComponent: {fileID: 7685446334863890748}
-  currentState: 
-  coralIntakeState:
-    name: Coral Intake State
-    stateNum: 1
-    stateMoveSpeed: 100
-    stateTarget: {fileID: 4121998424050558998}
-    smoothHandoff: 1
-    angularSpeed: 180
-  coralStowState:
-    name: Coral Stow State
-    stateNum: 2
-    stateMoveSpeed: 100
-    stateTarget: {fileID: 3729205841098675400}
-    smoothHandoff: 0
-    angularSpeed: 270
-  targetWristAngle: 0
-  targetElevatorDistance: 0
-  targetClimberAngle: 0
-  intakeAudioSource: {fileID: 2089935199074200190}
-  intakeClip: {fileID: 8300000, guid: c14afd4ff3d1fb2458302bc263109f73, type: 3}
-  intakeWheels:
-  - {fileID: 3299604546102114655}
-  - {fileID: 2194417760962099004}
-  - {fileID: 1227249501912366965}
-  - {fileID: 574924990764850694}
-  intakeWheelSpeed: 1000
-  funnelAnimationWheels:
-  - {fileID: 568498902802812963}
-  - {fileID: 4390177912271833916}
-  - {fileID: 8398066142702913618}
-  - {fileID: 7152013395651526922}
-  - {fileID: 80516475932594168}
-  - {fileID: 2919571132914551576}
-  funnelAnimationSpeed: -1000
 --- !u!114 &5520004873160498783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74253,28 +74170,7 @@ MonoBehaviour:
   m_DefaultActionMap: Robot
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!65 &7687418991113011009
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6145107239193163244}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.9540275, y: 0.17387044, z: 0.95596814}
-  m_Center: {x: -0.000000029802322, y: 0.11482081, z: 0.0007561445}
---- !u!114 &4930663437931110733
+--- !u!114 &9054878147592654270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74283,47 +74179,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 6145107239193163244}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20cb3794f26a4d04dab8b954d1f65ffa, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a05a705efbcae943ab591f8eedb1a3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stages:
-  - {fileID: 1791468384817669339}
-  - {fileID: 2831605994386868463}
-  elevatorType: 0
-  pidConstants:
-    kP: 17
-    kI: 0
-    kD: 0.5
-    Max: 4.25
-    Isaturation: 1
-  stagesPidConstants:
-    kP: 18
-    kI: 0
-    kD: 0.5
-    Max: 4
-    Isaturation: 1
-  elevatorAxis: 1
-  flipped: 0
-  setStageOverrides:
-  - stageNum: 1
-    overrideAxis: 1
-    useStartingOffset: 1
-  stageHeight: 46.5
-  stageOverlap: 0
-  carriageHeight: 0
-  elevatorSound: {fileID: 6320189024727769286}
-  elevatorClip: {fileID: 8300000, guid: 5e511c98579c56741a3dc1a08b38575b, type: 3}
-  minSpeed: 5
-  maxSpeed: 60
-  soundPitchRange: {x: 1, y: 1.05}
-  soundVolumeRange: {x: 0.1, y: 0.3}
-  stageClickClip: {fileID: 8300000, guid: 2a793e95cb27e3145a890e449b9de836, type: 3}
-  clickVolume: 0.1
-  clickSoundCooldown: 0.2
-  topClickOffset: 0.5
-  bottomClickOffset: 10
-  referenceTransform: {fileID: 0}
---- !u!114 &5826695917001789762
+  drivetrainParent: {fileID: 2557646371943964245}
+  wheelDiameter: 4
+  maxSpeed:
+    _obfuscationKey: 546696306
+    _encryptedValue: 1628826738
+  accelerationForce:
+    _obfuscationKey: 740567804
+    _encryptedValue: 1825843964
+  falloffPercent: 0.075
+  falloffExponent: 10
+  steerMultiplier: 1.3
+  speedDebug: 0
+  swerveAudioMixerGroup: {fileID: 4093094553572483033, guid: ed4b10d8b69fb1240aaf15a3cba9d0bd,
+    type: 2}
+  gearAudioResource: {fileID: 8300000, guid: affe685e481d252409ce6efa8d637caa, type: 3}
+  treadAudioResource: {fileID: 8300000, guid: a678915028b06f14a96455d7b29c3fab, type: 3}
+  moveSpeedMultiplier: 0
+  rotationSpeedMultiplier: 0
+--- !u!114 &2689107756292303104
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74332,10 +74209,92 @@ MonoBehaviour:
   m_GameObject: {fileID: 6145107239193163244}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abc605c990df445aa1e4023538cc900d, type: 3}
+  m_Script: {fileID: 11500000, guid: 378730c768c4163469905bbe63cd7281, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gamePieceNodes: []
+  alliance: 0
+  bumperMeshes: []
+  blueBumperMaterial: {fileID: 2100000, guid: 3856117be8f9d1544bc7dd5bc957d4d6, type: 2}
+  redBumperMaterial: {fileID: 2100000, guid: 8891c8be8334c264dbe596d910db7283, type: 2}
+  <CurrentSetpoint>k__BackingField: 0
+  <CurrentCoralStationMode>k__BackingField:
+    <DropType>k__BackingField: 1
+    <DropDistance>k__BackingField: 1.5
+    <DropStrength>k__BackingField: 4
+    <DropForceVariance>k__BackingField: 0
+    <RotationVariance>k__BackingField: 0
+    <DropOrientation>k__BackingField: 1
+    <RequireIntaking>k__BackingField: 0
+    <TargetTransform>k__BackingField: {fileID: 1881502945100412036}
+    <DrawDebugLines>k__BackingField: 0
+  superCycler: 0
+  wrist: {fileID: 7733919198722714855}
+  elevator: {fileID: 5477202686481452341}
+  climber: {fileID: 3039939583381403324}
+  funnelRollers:
+  - {fileID: 4319596422012810142}
+  - {fileID: 468062139124619578}
+  - {fileID: 337320261812508562}
+  - {fileID: 2991557802458181923}
+  - {fileID: 2036557011480280887}
+  - {fileID: 219309480999241993}
+  - {fileID: 3386078307635991215}
+  - {fileID: 6210157049269152545}
+  autoAlign: {fileID: 9108466554636851432}
+  wristPID:
+    kP: 1
+    kI: 0
+    kD: 0.2
+    Max: 18
+    Isaturation: 1
+  climberPID:
+    kP: 0
+    kI: 0
+    kD: 0
+    Max: 0
+    Isaturation: 0
+  stow: {fileID: 11400000, guid: d514a2d7736fe784a8a8e20f1b52aeb9, type: 2}
+  coralIntake: {fileID: 11400000, guid: 350ab1ca4b8613a4da73528e884b3ee1, type: 2}
+  coralStow: {fileID: 11400000, guid: dc702507740eda940a777586f5fed462, type: 2}
+  l1Left: {fileID: 11400000, guid: 9159826c13c887e43960ceed26dc28ed, type: 2}
+  l1Right: {fileID: 11400000, guid: 06f5e00502901834db08aa40016206a4, type: 2}
+  l2: {fileID: 11400000, guid: 59b91f5099a32a743b70e013aa60c226, type: 2}
+  l2Place: {fileID: 11400000, guid: 681147d1fe2c4a641a88fe6d7cc32aba, type: 2}
+  l3: {fileID: 11400000, guid: 7a53b34afb00bb541a5b61f30093045e, type: 2}
+  l3Place: {fileID: 11400000, guid: f0800aefe82d02f4d9ca66f19e787bca, type: 2}
+  l4: {fileID: 11400000, guid: 7fa1ad62a4e8cc04ebf36a83a0746a28, type: 2}
+  l4Place: {fileID: 11400000, guid: fa4c854d1a43e6a48bbaf93aa5d2873b, type: 2}
+  lowAlgae: {fileID: 11400000, guid: f582eb698da603e4d864eb130fd4268a, type: 2}
+  highAlgae: {fileID: 11400000, guid: e4437b7735f28f24da40f278574b8fcf, type: 2}
+  climb: {fileID: 11400000, guid: 432585d51d4ba224295e07ce7f8be49c, type: 2}
+  climbed: {fileID: 11400000, guid: d43c01617abde2e448dc43b3e3ec2c19, type: 2}
+  coralIntakeComponent: {fileID: 7685446334863890748}
+  coralIntakeState:
+    name: Coral Intake State
+    stateNum: 1
+    stateMoveSpeed: 100
+    stateTarget: {fileID: 4121998424050558998}
+    smoothHandoff: 1
+    angularSpeed: 180
+  coralStowState:
+    name: Coral Stow State
+    stateNum: 2
+    stateMoveSpeed: 100
+    stateTarget: {fileID: 3729205841098675400}
+    smoothHandoff: 0
+    angularSpeed: 270
+  intakeAudioSource: {fileID: 2089935199074200190}
+  intakeAudioClip: {fileID: 0}
+  intakeAnimationWheels: []
+  intakeAnimationSpeed: 300
+  funnelAnimationWheels:
+  - {fileID: 568498902802812963}
+  - {fileID: 4390177912271833916}
+  - {fileID: 8398066142702913618}
+  - {fileID: 7152013395651526922}
+  - {fileID: 80516475932594168}
+  - {fileID: 2919571132914551576}
+  funnelAnimationSpeed: -1000
 --- !u!114 &9108466554636851432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74357,6 +74316,40 @@ MonoBehaviour:
   strength: 300
   positionTolerance: 0.08
   rotateKp: 1.5
+--- !u!114 &5826695917001789762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6145107239193163244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc605c990df445aa1e4023538cc900d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gamePieceNodes: []
+--- !u!65 &7687418991113011009
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6145107239193163244}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9540275, y: 0.17387044, z: 0.95596814}
+  m_Center: {x: -0.000000029802322, y: 0.11482081, z: 0.0007561445}
 --- !u!1 &6147697978013598348
 GameObject:
   m_ObjectHideFlags: 0
