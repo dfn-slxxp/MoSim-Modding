@@ -32150,8 +32150,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0041395575, y: 0.21218416, z: 0.33313686}
-  m_Center: {x: 0.09516107, y: 0.37621754, z: -0.19103009}
+  m_Size: {x: 0.0041395575, y: 0.43259317, z: 0.33313686}
+  m_Center: {x: 0.09516153, y: 0.4864084, z: -0.19102412}
 --- !u!1 &2568013767201420773
 GameObject:
   m_ObjectHideFlags: 0
@@ -40856,7 +40856,7 @@ Transform:
   m_GameObject: {fileID: 3195951820189139590}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0017, y: 0.3755, z: -0.1819}
+  m_LocalPosition: {x: 0.0144, y: 0.4408, z: -0.154}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -53852,8 +53852,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0041395575, y: 0.2170302, z: 0.33313686}
-  m_Center: {x: 0.09515604, y: 0.3737939, z: -0.19103026}
+  m_Size: {x: 0.0041395575, y: 0.40933263, z: 0.33313686}
+  m_Center: {x: 0.09514675, y: 0.46992806, z: -0.19102317}
 --- !u!1 &4436883027226589018
 GameObject:
   m_ObjectHideFlags: 0
@@ -73503,9 +73503,9 @@ MonoBehaviour:
   <CurrentSetpoint>k__BackingField: 0
   <CurrentCoralStationMode>k__BackingField:
     <DropType>k__BackingField: 1
-    <DropDistance>k__BackingField: 1.625
-    <DropStrength>k__BackingField: 6
-    <DropForceVariance>k__BackingField: 0.05
+    <DropDistance>k__BackingField: 1.5
+    <DropStrength>k__BackingField: 4
+    <DropForceVariance>k__BackingField: 0
     <RotationVariance>k__BackingField: 0
     <DropOrientation>k__BackingField: 1
     <RequireIntaking>k__BackingField: 1
@@ -88660,8 +88660,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.13299134, y: 0.31019163, z: 0.0063940287}
-  m_Center: {x: -0.16204818, y: 0.56189096, z: -0.3607452}
+  m_Size: {x: 0.16959906, y: 0.31019163, z: 0.0063940287}
+  m_Center: {x: -0.180352, y: 0.56189096, z: -0.3607452}
 --- !u!1 &7432232975254419239
 GameObject:
   m_ObjectHideFlags: 0
@@ -97298,8 +97298,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.13407171, y: 0.31019157, z: 0.0063940287}
-  m_Center: {x: 0.16199812, y: 0.56189096, z: -0.3607452}
+  m_Size: {x: 0.18164271, y: 0.31019163, z: 0.0063940287}
+  m_Center: {x: 0.1857836, y: 0.56189096, z: -0.3607452}
 --- !u!1 &8241447612322137751
 GameObject:
   m_ObjectHideFlags: 0
@@ -99911,8 +99911,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.3584653, y: 0.18608475, z: 0.0063940287}
-  m_Center: {x: -0.00033292174, y: 0.62397206, z: -0.3607452}
+  m_Size: {x: 0.7486212, y: 0.21490192, z: 0.0063940287}
+  m_Center: {x: -0.011172295, y: 0.63838065, z: -0.3607452}
 --- !u!1 &8457687667575777138
 GameObject:
   m_ObjectHideFlags: 0
