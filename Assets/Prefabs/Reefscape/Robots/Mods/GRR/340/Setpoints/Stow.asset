@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Stow
   m_EditorClassIdentifier: 
   wristTarget: 0
-  elevatorDistance: 2
+  elevatorDistance: 2.5
   climberTarget: 0

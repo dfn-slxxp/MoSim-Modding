@@ -8323,7 +8323,7 @@ GameObject:
   - component: {fileID: 8601245712453770647}
   - component: {fileID: 3299604546102114655}
   m_Layer: 6
-  m_Name: Black Wheels Left
+  m_Name: Goose Left Black
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10661,8 +10661,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 830419864973017139}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.42432442, y: 0.3888217, z: 0.60293174, w: 0.5524851}
-  m_LocalPosition: {x: 0.057957795, y: 0.008844532, z: 0.0047287634}
+  m_LocalRotation: {x: 0.5263885, y: -0.5263886, z: -0.47213876, w: -0.47213906}
+  m_LocalPosition: {x: 0.06331963, y: 0.004526928, z: 0.003731966}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17156,12 +17156,12 @@ Transform:
   - {fileID: 8191578538122846645}
   - {fileID: 2553773257643257516}
   - {fileID: 2758934658442016696}
+  - {fileID: 3230157927498244041}
   - {fileID: 325450544594700281}
   - {fileID: 7471157664033830750}
-  - {fileID: 3230157927498244041}
-  - {fileID: 7468107408017124834}
-  - {fileID: 652801314513692279}
   - {fileID: 5324371831063963706}
+  - {fileID: 652801314513692279}
+  - {fileID: 7468107408017124834}
   m_Father: {fileID: 2955134354960938623}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &2089935199074200190
@@ -25389,7 +25389,7 @@ GameObject:
   - component: {fileID: 5324371831063963706}
   - component: {fileID: 80516475932594168}
   m_Layer: 6
-  m_Name: 'Right Side Front Funnel '
+  m_Name: Intake Right Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25404,7 +25404,7 @@ Transform:
   m_GameObject: {fileID: 1962476554444806309}
   serializedVersion: 2
   m_LocalRotation: {x: 0.579228, y: -0.4055798, z: 0.579228, w: -0.4055798}
-  m_LocalPosition: {x: 0.1093, y: 0.4225, z: -0.0849}
+  m_LocalPosition: {x: 0.10833, y: 0.4051606, z: -0.07577822}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -36806,8 +36806,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2883514711543857388}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.5524231, y: -0.44139385, z: 0.5887912, w: 0.39156756}
-  m_LocalPosition: {x: 0.056494527, y: 0.006286759, z: -0.0004427228}
+  m_LocalRotation: {x: -0.1415629, y: 0.6927916, z: 0.14156297, w: -0.69279134}
+  m_LocalPosition: {x: 0.08559542, y: 0.0006054193, z: -0.00018321723}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -38157,8 +38157,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2982191547312565060}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.3006417, y: 0.27548733, z: -0.67319584, w: -0.6168701}
-  m_LocalPosition: {x: 0.034818813, y: -0.002006894, z: -0.00081479736}
+  m_LocalRotation: {x: 0.70667875, y: -0.7066789, z: -0.024597555, w: -0.024597764}
+  m_LocalPosition: {x: 0.034511298, y: 0.004207682, z: -0.002573058}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -39081,7 +39081,7 @@ GameObject:
   - component: {fileID: 7471157664033830750}
   - component: {fileID: 568498902802812963}
   m_Layer: 6
-  m_Name: Left Side Back Funnel
+  m_Name: Intake Left Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39101,8 +39101,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2415654327487529766}
-  - {fileID: 1091073522910144887}
   - {fileID: 6208470780373408494}
+  - {fileID: 1091073522910144887}
   m_Father: {fileID: 8546794008119322266}
   m_LocalEulerAnglesHint: {x: 0, y: 270, z: -75}
 --- !u!114 &568498902802812963
@@ -49698,7 +49698,7 @@ GameObject:
   - component: {fileID: 2699588104460142041}
   - component: {fileID: 574924990764850694}
   m_Layer: 6
-  m_Name: Orange Wheels Right
+  m_Name: Goose Right Orange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54378,8 +54378,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4436883027226589018}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.42432442, y: 0.3888217, z: 0.60293174, w: 0.5524851}
-  m_LocalPosition: {x: 0.034469113, y: 0.0057642013, z: 0.0047287634}
+  m_LocalRotation: {x: 0.5263885, y: -0.5263886, z: -0.47213876, w: -0.47213906}
+  m_LocalPosition: {x: 0.038191035, y: 0.0048010796, z: 0.003731966}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -54448,7 +54448,7 @@ GameObject:
   - component: {fileID: 325450544594700281}
   - component: {fileID: 8398066142702913618}
   m_Layer: 0
-  m_Name: Left Side Middle Funnel
+  m_Name: Intake Left Middle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55291,8 +55291,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4544969813344933985}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.3006417, y: 0.27548733, z: -0.67319584, w: -0.6168701}
-  m_LocalPosition: {x: 0.058702245, y: -0.0001500994, z: -0.00081482716}
+  m_LocalRotation: {x: 0.52638835, y: -0.5263886, z: -0.47213867, w: -0.47213915}
+  m_LocalPosition: {x: 0.05963125, y: 0.0028220117, z: 0.006471172}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -59743,7 +59743,7 @@ GameObject:
   - component: {fileID: 8680742590435422996}
   - component: {fileID: 1227249501912366965}
   m_Layer: 6
-  m_Name: Oragne Wheels Left
+  m_Name: Goose Left Orange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64726,8 +64726,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5293319856892121819}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.4933738, y: 0.5065394, z: 0.4473487, w: -0.54761225}
-  m_LocalPosition: {x: 0.056590218, y: 0.0052663647, z: 0.00016734563}
+  m_LocalRotation: {x: -0.4168777, y: 0.5711509, z: 0.4168773, w: -0.5711506}
+  m_LocalPosition: {x: 0.05683392, y: -0.00031421334, z: 0.00044678152}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -65983,8 +65983,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5424302813918368603}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.49228406, y: 0.45109507, z: -0.5488482, w: -0.5029268}
-  m_LocalPosition: {x: 0.06070503, y: -0.0048204735, z: -0.0075487606}
+  m_LocalRotation: {x: -0.5263882, y: 0.52638835, z: 0.47213906, w: 0.4721393}
+  m_LocalPosition: {x: 0.040944427, y: 0.005769741, z: 0.0019289181}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -74231,15 +74231,6 @@ MonoBehaviour:
   wrist: {fileID: 7733919198722714855}
   elevator: {fileID: 5477202686481452341}
   climber: {fileID: 3039939583381403324}
-  funnelRollers:
-  - {fileID: 4319596422012810142}
-  - {fileID: 468062139124619578}
-  - {fileID: 337320261812508562}
-  - {fileID: 2991557802458181923}
-  - {fileID: 2036557011480280887}
-  - {fileID: 219309480999241993}
-  - {fileID: 3386078307635991215}
-  - {fileID: 6210157049269152545}
   autoAlign: {fileID: 9108466554636851432}
   wristPID:
     kP: 1
@@ -74285,16 +74276,20 @@ MonoBehaviour:
     angularSpeed: 270
   intakeAudioSource: {fileID: 2089935199074200190}
   intakeAudioClip: {fileID: 0}
-  intakeAnimationWheels: []
-  intakeAnimationSpeed: 300
-  funnelAnimationWheels:
-  - {fileID: 568498902802812963}
+  gooseAnimationWheels:
+  - {fileID: 3299604546102114655}
+  - {fileID: 1227249501912366965}
+  - {fileID: 2194417760962099004}
+  - {fileID: 574924990764850694}
+  gooseAnimationWheelSpeed: 900
+  intakeAnimationWheels:
   - {fileID: 4390177912271833916}
   - {fileID: 8398066142702913618}
-  - {fileID: 7152013395651526922}
+  - {fileID: 568498902802812963}
   - {fileID: 80516475932594168}
   - {fileID: 2919571132914551576}
-  funnelAnimationSpeed: -1000
+  - {fileID: 7152013395651526922}
+  intakeAnimationWheelSpeed: 900
 --- !u!114 &9108466554636851432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79135,7 +79130,7 @@ GameObject:
   - component: {fileID: 3230157927498244041}
   - component: {fileID: 4390177912271833916}
   m_Layer: 6
-  m_Name: Left Side Front Funnel
+  m_Name: Intake Left Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82913,7 +82908,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6895085483929356114}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.4168776, y: 0.5711509, z: 0.4168773, w: -0.5711506}
+  m_LocalRotation: {x: -0.4168777, y: 0.5711509, z: 0.4168773, w: -0.5711506}
   m_LocalPosition: {x: 0.05683392, y: -0.00031421334, z: 0.00044678152}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -85920,7 +85915,7 @@ GameObject:
   - component: {fileID: 652801314513692279}
   - component: {fileID: 2919571132914551576}
   m_Layer: 6
-  m_Name: Right Side Middle Funnel
+  m_Name: Intake Right Middle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85934,16 +85929,16 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7146922520172015164}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.579228, y: -0.4055798, z: 0.579228, w: -0.4055798}
-  m_LocalPosition: {x: 0.1083, y: 0.3974, z: -0.1804}
+  m_LocalRotation: {x: -0.4304593, y: 0.56098557, z: 0.4304593, w: -0.56098557}
+  m_LocalPosition: {x: 0.10815, y: 0.40015, z: -0.18315}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 913280480215136189}
   - {fileID: 1907341386489410191}
+  - {fileID: 913280480215136189}
   - {fileID: 2457608844021147384}
   m_Father: {fileID: 8546794008119322266}
-  m_LocalEulerAnglesHint: {x: 0, y: -270, z: -110}
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: -75}
 --- !u!114 &2919571132914551576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91236,9 +91231,9 @@ Transform:
   - {fileID: 109070110295666659}
   - {fileID: 7542985823756757004}
   - {fileID: 8601245712453770647}
-  - {fileID: 2699588104460142041}
   - {fileID: 8680742590435422996}
   - {fileID: 7938694997311622089}
+  - {fileID: 2699588104460142041}
   - {fileID: 2160035370176726919}
   m_Father: {fileID: 4680612366943037728}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -92452,13 +92447,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7700998803594616170}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7062632, y: 0.034530725, z: -0.7062632, w: 0.034530666}
-  m_LocalPosition: {x: 0.043754973, y: -0.00079951435, z: -0.001753429}
+  m_LocalRotation: {x: -0.003690068, y: -0.7070972, z: -0.003690068, w: 0.7070972}
+  m_LocalPosition: {x: 0.024042772, y: 0.00016056374, z: 0.00010739267}
   m_LocalScale: {x: 99.99998, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5324371831063963706}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.598, y: -90, z: 0}
 --- !u!33 &2421141688818808120
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -95631,7 +95626,7 @@ GameObject:
   - component: {fileID: 7468107408017124834}
   - component: {fileID: 7152013395651526922}
   m_Layer: 6
-  m_Name: Right Side Back Funnel
+  m_Name: Intake Right Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95645,8 +95640,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8022161543168004344}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.579228, y: -0.4055798, z: 0.579228, w: -0.4055798}
-  m_LocalPosition: {x: 0.0972, y: 0.3701, z: -0.28231}
+  m_LocalRotation: {x: -0.4304593, y: 0.56098557, z: 0.4304593, w: -0.56098557}
+  m_LocalPosition: {x: 0.09703, y: 0.3701, z: -0.28231}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -95654,7 +95649,7 @@ Transform:
   - {fileID: 5120543972909163045}
   - {fileID: 6479969463015191234}
   m_Father: {fileID: 8546794008119322266}
-  m_LocalEulerAnglesHint: {x: 0, y: -270, z: -110}
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: -75}
 --- !u!114 &7152013395651526922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96622,7 +96617,7 @@ GameObject:
   - component: {fileID: 7938694997311622089}
   - component: {fileID: 2194417760962099004}
   m_Layer: 6
-  m_Name: Black Wheels Right
+  m_Name: Goose Right Black
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106305,13 +106300,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8918048181795630870}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7069102, y: -0.016672185, z: 0.70567334, w: -0.04500258}
-  m_LocalPosition: {x: 0.081872776, y: 0.0022217706, z: -0.0014427714}
+  m_LocalRotation: {x: 0.44957048, y: -0.5457897, z: -0.44957048, w: 0.5457897}
+  m_LocalPosition: {x: 0.06264543, y: 0.00059906393, z: -0.00036319345}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5324371831063963706}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: -78.957}
 --- !u!33 &7043252387077161889
 MeshFilter:
   m_ObjectHideFlags: 0

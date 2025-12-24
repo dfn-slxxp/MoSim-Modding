@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Games.Reefscape.Enums;
 using Games.Reefscape.FieldScripts;
@@ -21,7 +22,6 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         [SerializeField] private GenericJoint wrist;
         [SerializeField] private GenericElevator elevator;
         [SerializeField] private GenericJoint climber;
-        [SerializeField] private GenericRoller[] funnelRollers;
 
         [Header("Motion Controllers")]
         [SerializeField]  private GRRAutoAlign autoAlign;
@@ -54,18 +54,18 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         [SerializeField] private AudioSource intakeAudioSource;
         [SerializeField] private AudioClip intakeAudioClip;
 
-        [Header("Intake Animation")]
+        [Header("Goose Wheel Animation")]
+        [SerializeField] private GenericAnimationJoint[] gooseAnimationWheels;
+        [SerializeField] private float gooseAnimationWheelSpeed = 900f;
+
+        [Header("Intake Wheel Animation")] 
         [SerializeField] private GenericAnimationJoint[] intakeAnimationWheels;
-        [SerializeField] private float intakeAnimationSpeed = 300f;
+        [SerializeField] private float intakeAnimationWheelSpeed = 900f;
 
-        [Header("Funnel Animation")] 
-        [SerializeField] private GenericAnimationJoint[] funnelAnimationWheels;
-        [SerializeField] private float funnelAnimationSpeed = 300f;
+        private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode _coralController;
 
-        private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode coralController;
-
-        private bool alreadyPlaced;
-        private bool _isPlacing;
+        private bool _alreadyPlaced = false;
+        private int _intakeEnum = 0;
 
         private float _wristAngle;
         private float _elevatorDistance;
@@ -83,16 +83,13 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             _climberAngle = stow.climberTarget;
 
             RobotGamePieceController.SetPreload(coralStowState);
-            coralController = RobotGamePieceController.GetPieceByName(ReefscapeGamePieceType.Coral.ToString());
-
-            coralController.gamePieceStates = new[] { coralIntakeState, coralStowState };
-            coralController.intakes.Add(coralIntakeComponent);
+            _coralController = RobotGamePieceController.GetPieceByName(ReefscapeGamePieceType.Coral.ToString());
+            _coralController.gamePieceStates = new[] { coralIntakeState, coralStowState };
+            _coralController.intakes.Add(coralIntakeComponent);
 
             intakeAudioSource.clip = intakeAudioClip;
             intakeAudioSource.loop = true;
             intakeAudioSource.Stop();
-
-            alreadyPlaced = false;
         }
 
         private void LateUpdate()
@@ -103,134 +100,102 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         private void FixedUpdate()
         {
-            bool autoPlace = autoAlign.InPosition();
-            if (autoPlace)
-            {
-                SetState(ReefscapeSetpoints.Place);
-            }
-
-            bool hasCoral = coralController.HasPiece();
-            
-            if (hasCoral)
-            {
-                foreach (var roller in funnelRollers)
-                {
-                    roller.flipVelocity();
-                }
-            }
-
-            if (CurrentSetpoint != ReefscapeSetpoints.Place)
-            {
-                alreadyPlaced = false;
-            }
+            SetWheelSpeeds(0, 0);
+            SetRobotMode(ReefscapeRobotMode.Coral); // hehe
 
             if (BaseGameManager.Instance.RobotState == RobotState.Disabled)
             {
                 return;
             }
 
-            UpdateAudio();
-            UpdateIntakeAnimation();
-            UpdateOuttakeAnimation();
+            bool hasCoral = _coralController.HasPiece();
+            bool autoPlace = autoAlign.InPosition();
+            if (autoPlace)
+            {
+                SetState(ReefscapeSetpoints.Place);
+            }
+
+            if (CurrentSetpoint != ReefscapeSetpoints.Place)
+            {
+                _alreadyPlaced = false;
+            }
 
             switch (CurrentSetpoint)
             {
-                case ReefscapeSetpoints.Stow:
-                    if (hasCoral)
-                    {
-                        SetSetpoint(coralStow);
-                        SetRobotMode(ReefscapeRobotMode.Coral);
-                    }
-                    else
-                    {
-                        SetSetpoint(stow);
-                    }
-
-                    coralController.SetTargetState(coralStowState);
+                case ReefscapeSetpoints.Stack:
+                case ReefscapeSetpoints.RobotSpecial:
+                    SetState(ReefscapeSetpoints.Stow);
                     break;
+                case ReefscapeSetpoints.Stow:
                 case ReefscapeSetpoints.Intake:
+                    SetSetpoint(stow);
+                    SetSetpoint(coralStow);
                     SetSetpoint(coralIntake);
 
                     if (!hasCoral)
                     {
-                        coralController.SetTargetState(coralIntakeState);
-                        coralController.RequestIntake(coralIntakeComponent, CurrentRobotMode == ReefscapeRobotMode.Coral && !hasCoral);
-                    } else
+                        _coralController.SetTargetState(coralIntakeState);
+                        _coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
+                        SetSetpoint(IntakeAction.IsPressed() ? coralIntake : stow);
+                    }
+                    else
                     {
-                        coralController.SetTargetState(coralStowState);
+                        if (IntakeAction.IsPressed()) _coralController.SetTargetState(coralStowState);
+                        SetSetpoint(!_coralController.atTarget ? coralIntake : coralStow);
                     }
             
+                    if (!_coralController.atTarget && IntakeAction.IsPressed())
+                    {
+                        SetWheelSpeeds(gooseAnimationWheelSpeed, intakeAnimationWheelSpeed);
+                    }
                     break;
                 case ReefscapeSetpoints.Place:
-                    if (!alreadyPlaced && (OuttakeAction.triggered || autoPlace))
+                    if (!_alreadyPlaced && (OuttakeAction.triggered || autoPlace))
                     {
                         StartCoroutine(PlacePiece());
+                        _alreadyPlaced = true;
                     }
-                    alreadyPlaced = true;
+
+                    SetWheelSpeeds(-gooseAnimationWheelSpeed, 0);
                     break;
                 case ReefscapeSetpoints.L1:
                     SetSetpoint(autoAlign.Left() ? l1Left : l1Right);
-                    coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
-                    break;
-                case ReefscapeSetpoints.Stack:
-                    SetState(ReefscapeSetpoints.Stow);
                     break;
                 case ReefscapeSetpoints.L2:
                     // If we don't have coral, redirect to algae setpoints
-                    if (!coralController.HasPiece())
+                    if (_coralController.HasPiece())
+                    {
+                        SetSetpoint(l2);
+                    }
+                    else
                     {
                         SetState(ReefscapeSetpoints.LowAlgae);
                     }
-                    else
-                    {
-                        SetSetpoint(l2);
-                        coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
-                    }
                     break;
                 case ReefscapeSetpoints.L3:
-                    // If we don't have coral, redirect to algae setpoints
-                    if (!coralController.HasPiece())
+                    if (_coralController.HasPiece())
                     {
-                        SetState(ReefscapeSetpoints.HighAlgae);
+                        SetSetpoint(l3);
                     }
                     else
                     {
-                        SetSetpoint(l3);
-                        coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
+                        SetState(ReefscapeSetpoints.HighAlgae);
                     }
                     break;
                 case ReefscapeSetpoints.L4:
                     SetSetpoint(l4);
-                    coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
                     break;
                 case ReefscapeSetpoints.LowAlgae:
                     SetSetpoint(lowAlgae);
-                    _climberAngle = lowAlgae.climberTarget;
-                    if (coralController.HasPiece())
-                    {
-                        coralController.RequestIntake(coralIntakeComponent, false);
-                    }
                     break;
                 case ReefscapeSetpoints.HighAlgae:
                     SetSetpoint(highAlgae);
-                    _climberAngle = highAlgae.climberTarget;
-                    if (coralController.HasPiece())
-                    {
-                        coralController.RequestIntake(coralIntakeComponent, false);
-                    }
-                    break;
-                case ReefscapeSetpoints.RobotSpecial:
-                    SetState(ReefscapeSetpoints.Stow);
                     break;
                 case ReefscapeSetpoints.Climb:
                     SetSetpoint(climb);
-                    _climberAngle = climb.climberTarget;
-                    coralController.RequestIntake(coralIntakeComponent, false);
                     break;
                 case ReefscapeSetpoints.Climbed:
                     SetSetpoint(climbed);
-                    _climberAngle = climbed.climberTarget;
-                    coralController.SetTargetState(coralStowState);
                     break;
                 default:
                     throw new System.ArgumentOutOfRangeException();
@@ -253,164 +218,9 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             climber.SetTargetAngle(_climberAngle).withAxis(JointAxis.Z).flipDirection();
         }
 
-        private void UpdateIntakeAnimation()
-        {
-            if (_isPlacing || CurrentSetpoint == ReefscapeSetpoints.Place)
-            {
-                // Don't run intake animation while placing/scoring
-                if (intakeAnimationWheels != null)
-                {
-                    foreach (var intakeWheel in intakeAnimationWheels)
-                    {
-                        if (intakeWheel != null)
-                        {
-                            intakeWheel.VelocityRoller(0);
-                        }
-                    }
-                }
-                if (funnelAnimationWheels != null)
-                {
-                    foreach (var funnelWheel in funnelAnimationWheels)
-                    {
-                        if (funnelWheel != null)
-                        {
-                            funnelWheel.VelocityRoller(0);
-                        }
-                    }
-                }
-                return;
-            }
-
-            // Algae setpoints: rollers run continuously until another setpoint is set
-            bool isAlgaeSetpoint = CurrentSetpoint == ReefscapeSetpoints.LowAlgae || 
-                                   CurrentSetpoint == ReefscapeSetpoints.HighAlgae;
-
-            if (isAlgaeSetpoint)
-            {
-                float direction = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
-                if (intakeAnimationWheels != null)
-                {
-                    foreach (var intakeWheel in intakeAnimationWheels)
-                    {
-                        if (intakeWheel != null)
-                        {
-                            intakeWheel.VelocityRoller(intakeAnimationSpeed * direction);
-                        }
-                    }
-                }
-                // Funnel animation doesn't run during algae setpoints
-                if (funnelAnimationWheels != null)
-                {
-                    foreach (var funnelWheel in funnelAnimationWheels)
-                    {
-                        if (funnelWheel != null)
-                        {
-                            funnelWheel.VelocityRoller(0);
-                        }
-                    }
-                }
-                return;
-            }
-
-            // Intake wheels only run when:
-            // 1. At Intake setpoint
-            // 2. Requesting intake (IntakeAction pressed and in Coral mode)
-            // 3. Don't have coral yet (stops once you get coral)
-            bool shouldIntake = CurrentSetpoint == ReefscapeSetpoints.Intake && 
-                                !coralController.HasPiece() && 
-                                CurrentRobotMode == ReefscapeRobotMode.Coral &&
-                                IntakeAction.IsPressed();
-
-            if (shouldIntake)
-            {
-                float direction = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
-                if (intakeAnimationWheels != null)
-                {
-                    foreach (var intakeWheel in intakeAnimationWheels)
-                    {
-                        if (intakeWheel != null)
-                        {
-                            intakeWheel.VelocityRoller(intakeAnimationSpeed * direction);
-                        }
-                    }
-                }
-                // Funnel animation runs during intake
-                if (funnelAnimationWheels != null)
-                {
-                    foreach (var funnelWheel in funnelAnimationWheels)
-                    {
-                        if (funnelWheel != null)
-                        {
-                            funnelWheel.VelocityRoller(funnelAnimationSpeed * direction);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // Stop intake wheels when conditions aren't met (unless we're in algae setpoint)
-                if (intakeAnimationWheels != null)
-                {
-                    foreach (var intakeWheel in intakeAnimationWheels)
-                    {
-                        if (intakeWheel != null)
-                        {
-                            intakeWheel.VelocityRoller(0);
-                        }
-                    }
-                }
-                // Stop funnel animation when not intaking
-                if (funnelAnimationWheels != null)
-                {
-                    foreach (var funnelWheel in funnelAnimationWheels)
-                    {
-                        if (funnelWheel != null)
-                        {
-                            funnelWheel.VelocityRoller(0);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void UpdateOuttakeAnimation()
-        {
-            // Outtake animation is handled in PlacePiece coroutine
-            // This method is here for consistency but outtake is handled in the coroutine
-        }
-
-        private void UpdateAudio()
-        {
-            if (BaseGameManager.Instance.RobotState == RobotState.Disabled)
-            {
-                if (intakeAudioSource != null && intakeAudioSource.isPlaying)
-                {
-                    intakeAudioSource.Stop();
-                }
-                return;
-            }
-
-            // Intake audio: play when intaking, outtaking, or climbing
-            if (intakeAudioSource != null)
-            {
-                if ((IntakeAction.IsPressed() || OuttakeAction.IsPressed() || CurrentSetpoint is ReefscapeSetpoints.Climb) &&
-                    !intakeAudioSource.isPlaying)
-                {
-                    intakeAudioSource.Play();
-                }
-                else if (!IntakeAction.IsPressed() && !OuttakeAction.IsPressed() && CurrentSetpoint is not ReefscapeSetpoints.Climb &&
-                         intakeAudioSource.isPlaying)
-                {
-                    intakeAudioSource.Stop();
-                }
-            }
-        }
-
         private IEnumerator PlacePiece()
         {
-            if (alreadyPlaced) yield break;
-            
-            _isPlacing = true;
+            if (_alreadyPlaced) yield break;
             
             switch (LastSetpoint)
             {
@@ -425,11 +235,10 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     break;
             }
 
-            //default mode is impulse
-            if (CurrentRobotMode == ReefscapeRobotMode.Coral && coralController.HasPiece())
+            if (CurrentRobotMode == ReefscapeRobotMode.Coral && _coralController.HasPiece())
             {
                 var time = 0.35f;
-                Vector3 force = new Vector3(0, 0, 4f);
+                var force = new Vector3(0, 0, 4f);
                 var maxSpeed = 0.5f;
 
                 if (LastSetpoint == ReefscapeSetpoints.L4 || LastSetpoint == ReefscapeSetpoints.Barge)
@@ -437,6 +246,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     time = 0.5f;
                     force = new Vector3(0, 0.45f, 5f);
                 }
+
                 else if (LastSetpoint == ReefscapeSetpoints.L1)
                 {
                     time = 0.4f;
@@ -444,31 +254,23 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     maxSpeed = 0.25f;
                 }
 
-                coralController.ReleaseGamePieceWithContinuedForce(force, time, maxSpeed);
-
-                // Outtake animation - reverse direction from intake
-                float currentIntakeDirection = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
-                float outtakeSpeed = -intakeAnimationSpeed * currentIntakeDirection;
-
-                float timer = 0;
-                while (timer < time)
-                {
-                    foreach (var wheel in intakeAnimationWheels)
-                    {
-                        wheel.VelocityRoller(outtakeSpeed);
-                    }
-                    timer += Time.deltaTime;
-                    yield return null;
-                }
-
-                foreach (var wheel in intakeAnimationWheels)
-                {
-                    wheel.VelocityRoller(0);
-                }
+                _coralController.ReleaseGamePieceWithContinuedForce(force, time, maxSpeed);
             }
             
-            _isPlacing = false;
             yield break;
+        }
+
+        private void SetWheelSpeeds(float goose, float intake)
+        {
+            for (int i = 0; i < gooseAnimationWheels.Length; i++)
+            {
+                gooseAnimationWheels[i].VelocityRoller(goose * (i < 3 ? -1 : 1));
+            }
+
+            for (int i = 0; i < intakeAnimationWheels.Length; i++)
+            {
+                intakeAnimationWheels[i].VelocityRoller(intake * (i < 2 ? 1 : -1));
+            }
         }
     }
 }

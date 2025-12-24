@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Coral Intake
   m_EditorClassIdentifier: 
   wristTarget: 0
-  elevatorDistance: 2
+  elevatorDistance: 1
   climberTarget: 0
