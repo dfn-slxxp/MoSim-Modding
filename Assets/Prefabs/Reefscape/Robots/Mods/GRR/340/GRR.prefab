@@ -73952,8 +73952,8 @@ GameObject:
   - component: {fileID: 9054878147592654270}
   - component: {fileID: 2689107756292303104}
   - component: {fileID: 9108466554636851432}
-  - component: {fileID: 5826695917001789762}
   - component: {fileID: 8756483182333210291}
+  - component: {fileID: 5826695917001789762}
   - component: {fileID: 7687418991113011009}
   m_Layer: 6
   m_Name: GRR
@@ -74257,25 +74257,12 @@ MonoBehaviour:
   x: 1.3
   y: 0.17
   avoidDistance: 0.18
-  avoidTime: 0.36
+  avoidTime: 0.4
   maxVelocity: 16
   maxDeceleration: 29
-  strength: 300
+  strength: 450
   positionTolerance: 0.08
-  rotateKp: 1.5
---- !u!114 &5826695917001789762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6145107239193163244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abc605c990df445aa1e4023538cc900d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gamePieceNodes: []
+  rotateKp: 1.25
 --- !u!114 &8756483182333210291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74325,6 +74312,19 @@ MonoBehaviour:
   topClickOffset: 0.5
   bottomClickOffset: 10
   referenceTransform: {fileID: 0}
+--- !u!114 &5826695917001789762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6145107239193163244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc605c990df445aa1e4023538cc900d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gamePieceNodes: []
 --- !u!65 &7687418991113011009
 BoxCollider:
   m_ObjectHideFlags: 0
