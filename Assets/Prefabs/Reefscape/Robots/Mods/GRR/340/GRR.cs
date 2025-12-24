@@ -53,7 +53,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         [Header("Game Piece States")] [SerializeField]
         private string currentState;
 
-        [SerializeField] private GamePieceState stowState;
+        [SerializeField] private GamePieceState coralIntakeState;
+        [SerializeField] private GamePieceState coralStowState;
 
         [Header("Target Positions")] [SerializeField]
         private float targetWristAngle;
@@ -83,10 +84,10 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             
             _previousSetpoint = ReefscapeSetpoints.Stow;
 
-            RobotGamePieceController.SetPreload(stowState);
+            RobotGamePieceController.SetPreload(coralStowState);
             coralController = RobotGamePieceController.GetPieceByName(ReefscapeGamePieceType.Coral.ToString());
 
-            coralController.gamePieceStates = new[] { stowState };
+            coralController.gamePieceStates = new[] { coralIntakeState, coralStowState };
             coralController.intakes.Add(coralIntakeComponent);
 
             _autoAlign = gameObject.GetComponent<GRRAutoAlign>();
@@ -147,10 +148,11 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                         SetSetpoint(stow);
                     }
 
-                    coralController.SetTargetState(stowState);
+                    coralController.SetTargetState(coralStowState);
                     break;
                 case ReefscapeSetpoints.Intake:
                     SetSetpoint(coralIntake);
+                    coralController.SetTargetState(coralIntakeState);
                     coralController.RequestIntake(coralIntakeComponent, CurrentRobotMode == ReefscapeRobotMode.Coral && !hasCoral);
 
                     if (hasCoral)
@@ -227,7 +229,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 case ReefscapeSetpoints.Climbed:
                     SetSetpoint(climbed);
                     targetClimberAngle = climbed.climberTarget;
-                    coralController.SetTargetState(stowState);
+                    coralController.SetTargetState(coralStowState);
                     break;
                 default:
                     throw new System.ArgumentOutOfRangeException();
