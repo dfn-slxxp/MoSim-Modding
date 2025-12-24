@@ -37806,9 +37806,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2977156984752182890}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.001
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0.001
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -37819,7 +37819,7 @@ Rigidbody:
     serializedVersion: 2
     m_Bits: 64
   m_ImplicitCom: 0
-  m_ImplicitTensor: 0
+  m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -74184,9 +74184,9 @@ MonoBehaviour:
   climber: {fileID: 3039939583381403324}
   autoAlign: {fileID: 9108466554636851432}
   wristPID:
-    kP: 1
+    kP: 0.8
     kI: 0
-    kD: 0.2
+    kD: 0
     Max: 18
     Isaturation: 1
   climberPID:
