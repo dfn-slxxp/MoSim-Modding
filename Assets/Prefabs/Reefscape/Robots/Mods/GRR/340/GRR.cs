@@ -268,8 +268,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             //default mode is impulse
             if (CurrentRobotMode == ReefscapeRobotMode.Coral && coralController.HasPiece())
             {
-                var time = 0.5f;
-                Vector3 force = new Vector3(0, 0, 5f);
+                var time = 0.35f;
+                Vector3 force = new Vector3(0, 0, 4f);
                 var maxSpeed = 0.5f;
 
                 if (LastSetpoint == ReefscapeSetpoints.L4 || LastSetpoint == ReefscapeSetpoints.Barge)
