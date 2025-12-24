@@ -275,7 +275,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 if (LastSetpoint == ReefscapeSetpoints.L4 || LastSetpoint == ReefscapeSetpoints.Barge)
                 {
                     time = 0.5f;
-                    force = new Vector3(0, 0.5f, 6f);
+                    force = new Vector3(0, 0.35f, 5f);
                 }
                 else if (LastSetpoint == ReefscapeSetpoints.L1)
                 {
