@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   elevatorHeight: 29.7
   eeArmAngle: 241.6
-  froggyAngle: 0
+  froggyAngle: 7
   climbPivotsAngle: 0

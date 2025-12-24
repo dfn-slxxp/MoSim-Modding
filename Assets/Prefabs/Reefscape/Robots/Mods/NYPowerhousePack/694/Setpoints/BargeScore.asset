@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: BargeScore
   m_EditorClassIdentifier: 
   elevatorHeight: 33
-  eeArmAngle: -147.8
-  froggyAngle: 0
+  eeArmAngle: -153.7
+  froggyAngle: 7
   climbPivotsAngle: 0

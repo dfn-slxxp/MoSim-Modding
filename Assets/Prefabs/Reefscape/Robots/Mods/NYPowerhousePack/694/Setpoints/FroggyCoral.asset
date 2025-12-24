@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: FroggyCoral
   m_EditorClassIdentifier: 
   elevatorHeight: 0
-  eeArmAngle: 0
+  eeArmAngle: 5.67
   froggyAngle: -96.4
   climbPivotsAngle: 0

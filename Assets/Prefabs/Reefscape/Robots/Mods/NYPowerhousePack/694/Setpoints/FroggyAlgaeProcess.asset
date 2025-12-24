@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: FroggyAlgaeProcess
   m_EditorClassIdentifier: 
   elevatorHeight: 0
-  eeArmAngle: 0
+  eeArmAngle: 5.67
   froggyAngle: 20
   climbPivotsAngle: 0

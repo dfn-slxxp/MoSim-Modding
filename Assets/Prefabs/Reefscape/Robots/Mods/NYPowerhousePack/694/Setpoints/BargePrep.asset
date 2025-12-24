@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: BargePrep
   m_EditorClassIdentifier: 
   elevatorHeight: 33
-  eeArmAngle: -84.2
-  froggyAngle: 0
+  eeArmAngle: -60.8
+  froggyAngle: 7
   climbPivotsAngle: 0
