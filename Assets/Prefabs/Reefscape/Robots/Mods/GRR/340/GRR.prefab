@@ -31452,8 +31452,8 @@ MonoBehaviour:
   boxExtents: {x: 5, y: 5, z: 10.5}
   maxDistance: 10
   accuracy: 2
-  lockXAxis: 0
-  lockYAxis: 0
+  lockXAxis: 1
+  lockYAxis: 1
   lockZAxis: 0
   roationForce: 2
   maxRotationSpeed: 10
