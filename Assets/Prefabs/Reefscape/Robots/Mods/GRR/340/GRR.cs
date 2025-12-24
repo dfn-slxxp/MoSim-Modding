@@ -62,8 +62,9 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         [SerializeField] private float targetElevatorDistance;
         [SerializeField] private float targetClimberAngle;
 
-        [Header("Robot Audio")] [SerializeField]
-        private AudioSource rollerSource;
+        [Header("Audio")] [SerializeField]
+        private AudioSource intakeAudioSource;
+        [SerializeField] private AudioClip intakeClip;
 
         [Header("Intake Wheels")] [SerializeField]
         private GenericAnimationJoint[] intakeWheels;
@@ -102,6 +103,10 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             coralController.intakes.Add(coralIntakeComponent);
 
             _autoAlign = gameObject.GetComponent<GRRAutoAlign>();
+
+            intakeAudioSource.clip = intakeClip;
+            intakeAudioSource.loop = true;
+            intakeAudioSource.Stop();
 
             alreadyPlaced = false;
         }
@@ -146,6 +151,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 return;
             }
 
+            UpdateAudio();
             UpdateIntakeAnimation();
             UpdateOuttakeAnimation();
 
@@ -394,6 +400,33 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         {
             // Outtake animation is handled in PlacePiece coroutine
             // This method is here for consistency but outtake is handled in the coroutine
+        }
+
+        private void UpdateAudio()
+        {
+            if (BaseGameManager.Instance.RobotState == RobotState.Disabled)
+            {
+                if (intakeAudioSource != null && intakeAudioSource.isPlaying)
+                {
+                    intakeAudioSource.Stop();
+                }
+                return;
+            }
+
+            // Intake audio: play when intaking, outtaking, or climbing
+            if (intakeAudioSource != null)
+            {
+                if ((IntakeAction.IsPressed() || OuttakeAction.IsPressed() || CurrentSetpoint is ReefscapeSetpoints.Climb) &&
+                    !intakeAudioSource.isPlaying)
+                {
+                    intakeAudioSource.Play();
+                }
+                else if (!IntakeAction.IsPressed() && !OuttakeAction.IsPressed() && CurrentSetpoint is not ReefscapeSetpoints.Climb &&
+                         intakeAudioSource.isPlaying)
+                {
+                    intakeAudioSource.Stop();
+                }
+            }
         }
 
         private IEnumerator PlacePiece()
