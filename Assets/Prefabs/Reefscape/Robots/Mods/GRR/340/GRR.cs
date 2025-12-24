@@ -65,11 +65,17 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         [Header("Robot Audio")] [SerializeField]
         private AudioSource rollerSource;
 
+        [Header("Intake Wheels")] [SerializeField]
+        private GenericAnimationJoint[] intakeWheels;
+        
+        [SerializeField] private float intakeWheelSpeed = 300f;
+
         private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode coralController;
 
         private ReefscapeSetpoints _previousSetpoint;
         private GRRAutoAlign _autoAlign;
         private bool alreadyPlaced;
+        private bool _isPlacing;
 
         protected override void Start()
         {
@@ -134,6 +140,9 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             {
                 return;
             }
+
+            UpdateIntakeAnimation();
+            UpdateOuttakeAnimation();
 
             switch (CurrentSetpoint)
             {
@@ -256,8 +265,71 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             climber.SetTargetAngle(targetClimberAngle).withAxis(JointAxis.Z).flipDirection();
         }
 
+        private void UpdateIntakeAnimation()
+        {
+            if (_isPlacing || CurrentSetpoint == ReefscapeSetpoints.Place)
+            {
+                // Don't run intake animation while placing/scoring
+                foreach (var intakeWheel in intakeWheels)
+                {
+                    intakeWheel.VelocityRoller(0);
+                }
+                return;
+            }
+
+            // Algae setpoints: rollers run continuously until another setpoint is set
+            bool isAlgaeSetpoint = CurrentSetpoint == ReefscapeSetpoints.LowAlgae || 
+                                   CurrentSetpoint == ReefscapeSetpoints.HighAlgae;
+
+            if (isAlgaeSetpoint)
+            {
+                float direction = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
+                foreach (var intakeWheel in intakeWheels)
+                {
+                    intakeWheel.VelocityRoller(intakeWheelSpeed * direction);
+                }
+                return;
+            }
+
+            // Intake wheels only run when:
+            // 1. At Intake setpoint
+            // 2. Requesting intake (IntakeAction pressed and in Coral mode)
+            // 3. Don't have coral yet (stops once you get coral)
+            bool shouldIntake = CurrentSetpoint == ReefscapeSetpoints.Intake && 
+                                !coralController.HasPiece() && 
+                                CurrentRobotMode == ReefscapeRobotMode.Coral &&
+                                IntakeAction.IsPressed();
+
+            if (shouldIntake)
+            {
+                float direction = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
+                foreach (var intakeWheel in intakeWheels)
+                {
+                    intakeWheel.VelocityRoller(intakeWheelSpeed * direction);
+                }
+            }
+            else
+            {
+                // Stop intake wheels when conditions aren't met (unless we're in algae setpoint)
+                foreach (var intakeWheel in intakeWheels)
+                {
+                    intakeWheel.VelocityRoller(0);
+                }
+            }
+        }
+
+        private void UpdateOuttakeAnimation()
+        {
+            // Outtake animation is handled in PlacePiece coroutine
+            // This method is here for consistency but outtake is handled in the coroutine
+        }
+
         private IEnumerator PlacePiece()
         {
+            if (alreadyPlaced) yield break;
+            
+            _isPlacing = true;
+            
             switch (LastSetpoint)
             {
                 case ReefscapeSetpoints.L4:
@@ -291,8 +363,29 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 }
 
                 coralController.ReleaseGamePieceWithContinuedForce(force, time, maxSpeed);
+
+                // Outtake animation - reverse direction from intake
+                float currentIntakeDirection = (CurrentRobotMode == ReefscapeRobotMode.Algae) ? 1f : -1f;
+                float outtakeSpeed = -intakeWheelSpeed * currentIntakeDirection;
+
+                float timer = 0;
+                while (timer < time)
+                {
+                    foreach (var wheel in intakeWheels)
+                    {
+                        wheel.VelocityRoller(outtakeSpeed);
+                    }
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+
+                foreach (var wheel in intakeWheels)
+                {
+                    wheel.VelocityRoller(0);
+                }
             }
             
+            _isPlacing = false;
             yield break;
         }
     }
