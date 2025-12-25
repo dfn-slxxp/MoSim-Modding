@@ -97,27 +97,18 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         private void FixedUpdate()
         {
-            SetWheelSpeeds(0, 0);
             SetRobotMode(ReefscapeRobotMode.Coral); // hehe
+            SetWheelSpeeds(0, 0);
 
-            if (BaseGameManager.Instance.RobotState == RobotState.Disabled)
-            {
-                return;
-            }
+            if (BaseGameManager.Instance.RobotState == RobotState.Disabled) return;
 
             bool hasCoral = _coralController.HasPiece();
+            bool coralSeated = _coralController.atTarget;
             bool autoPlace = autoAlign.InPosition();
             bool safe = autoAlign.ReefDistance() >= safeDistance;
 
-            if (autoPlace)
-            {
-                SetState(ReefscapeSetpoints.Place);
-            }
-
-            if (CurrentSetpoint != ReefscapeSetpoints.Place)
-            {
-                _alreadyPlaced = false;
-            }
+            if (autoPlace) SetState(ReefscapeSetpoints.Place);
+            if (CurrentSetpoint != ReefscapeSetpoints.Place) _alreadyPlaced = false;
 
             switch (CurrentSetpoint)
             {
@@ -136,10 +127,10 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     else
                     {
                         if (IntakeAction.IsPressed()) _coralController.SetTargetState(coralStowState);
-                        if (safe) SetSetpoint(!_coralController.atTarget ? coralIntake : coralStow);
+                        if (safe) SetSetpoint(!coralSeated ? coralIntake : coralStow);
                     }
             
-                    if (!_coralController.atTarget && IntakeAction.IsPressed())
+                    if (!coralSeated && IntakeAction.IsPressed())
                     {
                         SetWheelSpeeds(gooseAnimationWheelSpeed, intakeAnimationWheelSpeed);
                     }
@@ -155,31 +146,18 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     if (_alreadyPlaced && safe) SetSetpoint(stow);
                     break;
                 case ReefscapeSetpoints.L1:
-                    SetSetpoint(autoAlign.Left() ? l1Left : l1Right);
+                    if (coralSeated) SetSetpoint(autoAlign.Left() ? l1Left : l1Right);
                     break;
                 case ReefscapeSetpoints.L2:
-                    // If we don't have coral, redirect to algae setpoints
-                    if (_coralController.HasPiece())
-                    {
-                        SetSetpoint(l2);
-                    }
-                    else
-                    {
-                        SetState(ReefscapeSetpoints.LowAlgae);
-                    }
+                    if (coralSeated) SetSetpoint(l2);
+                    else if (!hasCoral) SetState(ReefscapeSetpoints.LowAlgae);
                     break;
                 case ReefscapeSetpoints.L3:
-                    if (_coralController.HasPiece())
-                    {
-                        SetSetpoint(l3);
-                    }
-                    else
-                    {
-                        SetState(ReefscapeSetpoints.HighAlgae);
-                    }
+                    if (coralSeated) SetSetpoint(l3);
+                    else if (!hasCoral) SetState(ReefscapeSetpoints.HighAlgae);
                     break;
                 case ReefscapeSetpoints.L4:
-                    SetSetpoint(l4);
+                    if (coralSeated) SetSetpoint(l4);
                     break;
                 case ReefscapeSetpoints.LowAlgae:
                     SetSetpoint(lowAlgae);
@@ -239,9 +217,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
                 if (LastSetpoint == ReefscapeSetpoints.L4 || LastSetpoint == ReefscapeSetpoints.Barge)
                 {
-                    time = 1f;
-                    force = new Vector3(0, 0.6f, 1.8f);
-                    maxSpeed = 1.4f;
+                    force = new Vector3(0, 0.4f, 0.6f);
+                    maxSpeed = 5f;
                 }
 
                 else if (LastSetpoint == ReefscapeSetpoints.L1)
