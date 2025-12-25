@@ -235,12 +235,13 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             {
                 var time = 0.35f;
                 var force = new Vector3(0, 0, 4f);
-                var maxSpeed = 0.5f;
+                var maxSpeed = 0.8f;
 
                 if (LastSetpoint == ReefscapeSetpoints.L4 || LastSetpoint == ReefscapeSetpoints.Barge)
                 {
                     time = 1.2f;
-                    force = new Vector3(0, 0.72f, 4f);
+                    force = new Vector3(0, 0.7f, 2f);
+                    maxSpeed = 1.4f;
                 }
 
                 else if (LastSetpoint == ReefscapeSetpoints.L1)

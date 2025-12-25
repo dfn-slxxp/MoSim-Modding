@@ -46914,7 +46914,7 @@ ConfigurableJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3700580483689478833}
   serializedVersion: 4
-  m_ConnectedBody: {fileID: 7081453290274049641}
+  m_ConnectedBody: {fileID: 4909847808046393406}
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
@@ -74280,17 +74280,17 @@ MonoBehaviour:
   - {fileID: 2831605994386868463}
   elevatorType: 0
   pidConstants:
-    kP: 17
-    kI: 0
-    kD: 0.5
-    Max: 4.25
-    Isaturation: 1
-  stagesPidConstants:
     kP: 18
     kI: 0
-    kD: 0.5
-    Max: 4
+    kD: 0.1
+    Max: 2.2
     Isaturation: 1
+  stagesPidConstants:
+    kP: 0
+    kI: 0
+    kD: 0
+    Max: 0
+    Isaturation: 0
   elevatorAxis: 1
   flipped: 0
   setStageOverrides:
