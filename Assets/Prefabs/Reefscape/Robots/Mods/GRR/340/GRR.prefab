@@ -74171,7 +74171,7 @@ MonoBehaviour:
   <CurrentCoralStationMode>k__BackingField:
     <DropType>k__BackingField: 1
     <DropDistance>k__BackingField: 1.65
-    <DropStrength>k__BackingField: 4.2
+    <DropStrength>k__BackingField: 4
     <DropForceVariance>k__BackingField: 0
     <RotationVariance>k__BackingField: 0
     <DropOrientation>k__BackingField: 1
@@ -74257,7 +74257,7 @@ MonoBehaviour:
   x: 1.3
   y: 0.17
   avoidDistance: 0.18
-  avoidTime: 0.4
+  avoidTime: 0.45
   maxVelocity: 16
   maxDeceleration: 29
   strength: 450
@@ -74280,10 +74280,10 @@ MonoBehaviour:
   - {fileID: 2831605994386868463}
   elevatorType: 0
   pidConstants:
-    kP: 18
+    kP: 16
     kI: 0
-    kD: 0.1
-    Max: 2.2
+    kD: 0.14
+    Max: 1.7
     Isaturation: 1
   stagesPidConstants:
     kP: 0
