@@ -21,11 +21,11 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         [Header("Translation")]
         [Tooltip("The configured maximum velocity of the robot, in ft/s")]
-        public float maxVelocity = 16.0f;
+        public float maxVelocity = 17.0f;
         [Tooltip("The maximum deceleration of the auto-align controller, in ft/s/s")]
-        public float maxDeceleration = 29.0f;
+        public float maxDeceleration = 32.0f;
         [Tooltip("Arbitrary strength force for centering the robot on the targeted reef pole")]
-        public float strength = 450f;
+        public float strength = 475f;
         [Tooltip("The tolerance at which the controller signals that the robot is in position")]
         public float positionTolerance = 0.08f;
 

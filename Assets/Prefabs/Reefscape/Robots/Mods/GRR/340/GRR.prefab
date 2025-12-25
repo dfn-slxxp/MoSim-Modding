@@ -73991,8 +73991,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6145107239193163244}
   serializedVersion: 4
-  m_Mass: 70
-  m_Drag: 3.75
+  m_Mass: 92.5
+  m_Drag: 3
   m_AngularDrag: 5
   m_CenterOfMass: {x: 0, y: 0.0889, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -74136,11 +74136,11 @@ MonoBehaviour:
   drivetrainParent: {fileID: 2557646371943964245}
   wheelDiameter: 4
   maxSpeed:
-    _obfuscationKey: 546696306
-    _encryptedValue: 1628826738
+    _obfuscationKey: 1338030503
+    _encryptedValue: 239647143
   accelerationForce:
-    _obfuscationKey: 740567804
-    _encryptedValue: 1825843964
+    _obfuscationKey: 1944016087
+    _encryptedValue: 853497047
   falloffPercent: 0.075
   falloffExponent: 10
   steerMultiplier: 1.3
@@ -74258,9 +74258,9 @@ MonoBehaviour:
   y: 0.17
   avoidDistance: 0.18
   avoidTime: 0.45
-  maxVelocity: 16
-  maxDeceleration: 29
-  strength: 450
+  maxVelocity: 17
+  maxDeceleration: 32
+  strength: 475
   positionTolerance: 0.08
   rotateKp: 1.25
 --- !u!114 &8756483182333210291
