@@ -185,7 +185,7 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
 
         private void PlacePiece()
         {
-            if (LastSetpoint != ReefscapeSetpoints.L2 && LastSetpoint != ReefscapeSetpoints.L3 && LastSetpoint != ReefscapeSetpoints.L4 && _coralController.HasPiece())
+            if (LastSetpoint != ReefscapeSetpoints.L2 && LastSetpoint != ReefscapeSetpoints.L3 && LastSetpoint != ReefscapeSetpoints.L4 && _coralController.HasPiece() && !(_coralController.currentStateNum == shooterCoralStowState.stateNum && _coralController.atTarget))
             {
                 _coralController.ReleaseGamePieceWithForce(new Vector3(0, 0, 2));
             }
@@ -197,7 +197,7 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                 }
                 else
                 {
-                    _algaeController.ReleaseGamePieceWithForce(new Vector3(0, 0.5f, 0));
+                    _algaeController.ReleaseGamePieceWithForce(new Vector3(0, 0.8f, 0));
                 }
             }
             else if (LastSetpoint == ReefscapeSetpoints.L4)
@@ -208,7 +208,7 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
             }
             else if (LastSetpoint == ReefscapeSetpoints.L1 && CurrentIntakeMode == ReefscapeIntakeMode.Normal)
             {
-                _coralController.ReleaseGamePieceWithContinuedForce(new Vector3(0, 0, 3.5f), 0.3f, 1f);
+                _coralController.ReleaseGamePieceWithContinuedForce(new Vector3(0, 0, 3.5f), 0.2f, .9f);
             }
             else
             {
@@ -272,7 +272,8 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     PlacePiece();
             break;
                 case ReefscapeSetpoints.L1:
-                    SetSetpoint(eeL1);
+                    SetSetpoint(shooterHasCoral? eeL1 : froggyCoralPlace);
+
                     _algaeController.RequestIntake(funnelCoralIntake, false);
                     _coralController.RequestIntake(froggyCoralIntake, false);
                     _coralController.RequestIntake(shooterAlgaeIntake, false);
@@ -283,7 +284,11 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
                     break;
                 case ReefscapeSetpoints.L2:
-                    SetSetpoint(FacingReef ? frontL2 : backL2);
+                    if (shooterHasCoral)
+                    {
+                        SetSetpoint(FacingReef ? frontL2 : backL2);
+                    }
+
                     _algaeController.RequestIntake(funnelCoralIntake, false);
                     _coralController.RequestIntake(froggyCoralIntake, false);
                     _coralController.RequestIntake(shooterAlgaeIntake, false);
@@ -294,7 +299,11 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
                     break;
                 case ReefscapeSetpoints.L3:
-                    SetSetpoint(FacingReef ? frontL3 : backL3);
+                    if (shooterHasCoral)
+                    {
+                        SetSetpoint(FacingReef ? frontL3 : backL3);
+                    }
+
                     _algaeController.RequestIntake(funnelCoralIntake, false);
                     _coralController.RequestIntake(froggyCoralIntake, false);
                     _coralController.RequestIntake(shooterAlgaeIntake, false);
@@ -309,7 +318,11 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     _coralController.RequestIntake(froggyCoralIntake, false);
                     _coralController.RequestIntake(shooterAlgaeIntake, false);
                     _algaeController.RequestIntake(froggyAlgaeIntake, false);
-                    SetSetpoint(FacingReef ? frontL4 : backL4);
+                    if (shooterHasCoral)
+                    {
+                        SetSetpoint(FacingReef ? frontL4 : backL4);
+                    }
+
                     AutoAlignnnn();
                     break;
                 case ReefscapeSetpoints.Processor:

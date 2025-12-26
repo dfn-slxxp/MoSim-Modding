@@ -17258,59 +17258,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &1238332849356243783
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8767549768548532750}
-  - component: {fileID: 1785359205738353903}
-  m_Layer: 6
-  m_Name: intka
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8767549768548532750
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1238332849356243783}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.19349846, y: -0, z: -0, w: 0.9811006}
-  m_LocalPosition: {x: -0.013000004, y: 0.027751733, z: 0.0073987977}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6500563406931953342}
-  m_LocalEulerAnglesHint: {x: 22.314, y: 0, z: 0}
---- !u!65 &1785359205738353903
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1238332849356243783}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.63, y: 0.05, z: 0.05}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1243282508545312473
 GameObject:
   m_ObjectHideFlags: 0
@@ -34459,7 +34406,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2534371394911199621}
   serializedVersion: 4
-  m_Mass: 110
+  m_Mass: 105
   m_Drag: 3
   m_AngularDrag: 5
   m_CenterOfMass: {x: 0, y: 0.127, z: 0}
@@ -34748,7 +34695,7 @@ MonoBehaviour:
   climbClimb: {fileID: 11400000, guid: 0e64ac9dd1fa741468cfa97bddc5912c, type: 2}
   funnelCoralIntake: {fileID: 3640972856858320504}
   shooterAlgaeIntake: {fileID: 2780646856814958767}
-  froggyCoralIntake: {fileID: 2673367312212782738}
+  froggyCoralIntake: {fileID: 1596764497475367110}
   froggyAlgaeIntake: {fileID: 2416019150981151230}
   shooterCoralStowState:
     name: Shooter Coral Stow State
@@ -34756,28 +34703,28 @@ MonoBehaviour:
     stateMoveSpeed: 60
     stateTarget: {fileID: 8074000578692892724}
     smoothHandoff: 0
-    angularSpeed: 0
+    angularSpeed: 18
   shooterAlgaeStowState:
     name: Shooter Algae Stow State
     stateNum: 2
     stateMoveSpeed: 80
     stateTarget: {fileID: 8747950043858912669}
     smoothHandoff: 0
-    angularSpeed: 0
+    angularSpeed: 18
   froggyCoralStowState:
     name: Froggy Coral Stow State
     stateNum: 3
     stateMoveSpeed: 60
-    stateTarget: {fileID: 6500563406931953342}
+    stateTarget: {fileID: 4209134667632273686}
     smoothHandoff: 0
-    angularSpeed: 0
+    angularSpeed: 180
   froggyAlgaeStowState:
     name: Froggy Algae Stow State
     stateNum: 4
     stateMoveSpeed: 0
     stateTarget: {fileID: 8228175622260510719}
     smoothHandoff: 0
-    angularSpeed: 0
+    angularSpeed: 180
   frontLeftOffset: {fileID: 11400000, guid: cdf8fb4f19570bd42a25951e84dd6ac9, type: 2}
   frontRightOffset: {fileID: 11400000, guid: cdf8fb4f19570bd42a25951e84dd6ac9, type: 2}
   backLeftOffset: {fileID: 11400000, guid: 6ce4e5c286a805743968a32caa93531e, type: 2}
@@ -49471,6 +49418,72 @@ Transform:
   - {fileID: 5565765006595396972}
   m_Father: {fileID: 2281270795988327167}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3597970202263581854
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4209134667632273686}
+  - component: {fileID: 1596764497475367110}
+  m_Layer: 6
+  m_Name: fog cola intka
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4209134667632273686
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3597970202263581854}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.018, y: 0.346, z: 0.003}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4211964416143593981}
+  m_Father: {fileID: 3666801464915436162}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &1596764497475367110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3597970202263581854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fff788c5b97046ee9e9e8f7f33701499, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  intakeCollider:
+  - {fileID: 6949144485489234463}
+  gamePieces: {fileID: 0}
+  hasGamePiece: 0
+  requestIntake: 0
+  pieceName: 
+  intakeSpeed: 100
+  intakeForce: 100
+  usePlanarTolerancing: 1
+  boxExtents: {x: 3, y: 3, z: 7.68}
+  maxDistance: 5
+  accuracy: 1
+  lockXAxis: 1
+  lockYAxis: 0
+  lockZAxis: 0
+  roationForce: 20
+  maxRotationSpeed: 20
+  useRotaion: 1
+  smoothHandoff: 1
+  target: {fileID: 4209134667632273686}
+  securedGamePiece: 0
 --- !u!1 &3600434093140769934
 GameObject:
   m_ObjectHideFlags: 0
@@ -54205,72 +54218,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &3947281046259590627
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6500563406931953342}
-  - component: {fileID: 2673367312212782738}
-  m_Layer: 6
-  m_Name: froggycoralsto
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6500563406931953342
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3947281046259590627}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.21431985, y: -0, z: -0, w: 0.97676355}
-  m_LocalPosition: {x: -0.009, y: 0.353, z: 0.003}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8767549768548532750}
-  m_Father: {fileID: 3666801464915436162}
-  m_LocalEulerAnglesHint: {x: -24.751, y: 0, z: 0}
---- !u!114 &2673367312212782738
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3947281046259590627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fff788c5b97046ee9e9e8f7f33701499, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  intakeCollider:
-  - {fileID: 1785359205738353903}
-  gamePieces: {fileID: 0}
-  hasGamePiece: 0
-  requestIntake: 0
-  pieceName: 
-  intakeSpeed: 20
-  intakeForce: 30
-  usePlanarTolerancing: 1
-  boxExtents: {x: 23.9, y: 2, z: 2}
-  maxDistance: 20
-  accuracy: 20
-  lockXAxis: 1
-  lockYAxis: 0
-  lockZAxis: 0
-  roationForce: 24.44
-  maxRotationSpeed: 3.12
-  useRotaion: 1
-  smoothHandoff: 1
-  target: {fileID: 8767549768548532750}
-  securedGamePiece: 0
 --- !u!1 &3961516877680096472
 GameObject:
   m_ObjectHideFlags: 0
@@ -98634,12 +98581,12 @@ MonoBehaviour:
   boxExtents: {x: 18.4, y: 2, z: 3}
   maxDistance: 9.03
   accuracy: 7.05
-  lockXAxis: 0
+  lockXAxis: 1
   lockYAxis: 0
   lockZAxis: 0
-  roationForce: 0
-  maxRotationSpeed: 0
-  useRotaion: 0
+  roationForce: 20
+  maxRotationSpeed: 30
+  useRotaion: 1
   smoothHandoff: 1
   target: {fileID: 8228175622260510719}
   securedGamePiece: 0
@@ -107310,7 +107257,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6500563406931953342}
+  - {fileID: 4209134667632273686}
   m_Father: {fileID: 1682996330377131118}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8144595107824642463
@@ -115720,6 +115667,59 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8717530643958317635
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4211964416143593981}
+  - component: {fileID: 6949144485489234463}
+  m_Layer: 6
+  m_Name: colder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4211964416143593981
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8717530643958317635}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.028, y: 0.028, z: -0.006}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4209134667632273686}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6949144485489234463
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8717530643958317635}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.07, y: 0.06, z: 0.64}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8734324752437290323
 GameObject:
   m_ObjectHideFlags: 0
