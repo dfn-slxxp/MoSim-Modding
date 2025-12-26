@@ -118,22 +118,26 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     break;
                 case ReefscapeSetpoints.Stow:
                 case ReefscapeSetpoints.Intake:
-                    if (!hasCoral)
+                    if (safe)
                     {
-                        _coralController.SetTargetState(coralIntakeState);
-                        _coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
-                        if (safe) SetSetpoint(IntakeAction.IsPressed() ? coralIntake : stow);
+                        if (!hasCoral)
+                        {
+                            _coralController.SetTargetState(coralIntakeState);
+                            _coralController.RequestIntake(coralIntakeComponent, IntakeAction.IsPressed());
+                            SetSetpoint(IntakeAction.IsPressed() ? coralIntake : stow);
+                        }
+                        else
+                        {
+                            if (IntakeAction.IsPressed()) _coralController.SetTargetState(coralStowState);
+                            SetSetpoint(!coralSeated ? coralIntake : coralStow);
+                        }
+                
+                        if (!coralSeated && IntakeAction.IsPressed())
+                        {
+                            SetWheelSpeeds(gooseAnimationWheelSpeed, intakeAnimationWheelSpeed);
+                        }
                     }
-                    else
-                    {
-                        if (IntakeAction.IsPressed()) _coralController.SetTargetState(coralStowState);
-                        if (safe) SetSetpoint(!coralSeated ? coralIntake : coralStow);
-                    }
-            
-                    if (!coralSeated && IntakeAction.IsPressed())
-                    {
-                        SetWheelSpeeds(gooseAnimationWheelSpeed, intakeAnimationWheelSpeed);
-                    }
+                    
                     break;
                 case ReefscapeSetpoints.Place:
                     if (!_alreadyPlaced && (OuttakeAction.triggered || autoPlace))
@@ -211,12 +215,13 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
             if (CurrentRobotMode == ReefscapeRobotMode.Coral && _coralController.HasPiece())
             {
-                var time = 0.35f;
+                var time = 0.3f;
                 var force = new Vector3(0, 0, 4f);
                 var maxSpeed = 0.8f;
 
                 if (LastSetpoint == ReefscapeSetpoints.L4 || LastSetpoint == ReefscapeSetpoints.Barge)
                 {
+                    time = 0.35f;
                     force = new Vector3(0, 0.4f, 0.6f);
                     maxSpeed = 5f;
                 }
@@ -224,8 +229,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                 else if (LastSetpoint == ReefscapeSetpoints.L1)
                 {
                     time = 0.4f;
-                    force = new Vector3(0, 0, 3f);
-                    maxSpeed = 0.25f;
+                    force = new Vector3(0, 0f, 3f);
+                    maxSpeed = 0.5f;
                 }
 
                 _coralController.ReleaseGamePieceWithContinuedForce(force, time, maxSpeed);

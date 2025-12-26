@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: L1 Right
   m_EditorClassIdentifier: 
   wristTarget: 145
-  elevatorDistance: 8
+  elevatorDistance: 9
   climberTarget: 0
