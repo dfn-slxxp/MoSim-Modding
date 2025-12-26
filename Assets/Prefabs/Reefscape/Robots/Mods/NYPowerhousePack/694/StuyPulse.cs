@@ -79,6 +79,9 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
         [SerializeField] private AutoAlignOffset frontRightL4Offset;
         [SerializeField] private AutoAlignOffset backLeftL4Offset;
         [SerializeField] private AutoAlignOffset backRightL4Offset;
+
+        [SerializeField] private Transform forggyCoralTarget;
+        [SerializeField] private Transform frogyCoralSlid;
         
         private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode
             _coralController;
@@ -187,7 +190,7 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
         {
             if (LastSetpoint != ReefscapeSetpoints.L2 && LastSetpoint != ReefscapeSetpoints.L3 && LastSetpoint != ReefscapeSetpoints.L4 && _coralController.HasPiece() && !(_coralController.currentStateNum == shooterCoralStowState.stateNum && _coralController.atTarget))
             {
-                _coralController.ReleaseGamePieceWithForce(new Vector3(0, 0, 2));
+                _coralController.ReleaseGamePieceWithForce(new Vector3(0, 2, -2));
             }
             else if (_algaeController.HasPiece())
             {
@@ -224,11 +227,17 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
             bool shooterHasAlgae = (_algaeController.currentStateNum == shooterAlgaeStowState.stateNum && _algaeController.atTarget);
             bool shooterHasCoral = (_coralController.currentStateNum == shooterCoralStowState.stateNum && _coralController.atTarget);
             
+            if (froggyCoralIntake.GamePiece != null)
+            {
+                var localSliderSpaceZ = forggyCoralTarget.transform.InverseTransformPoint(froggyCoralIntake.GamePiece.transform.position).z;
+                frogyCoralSlid.localPosition = new Vector3(0, 0, localSliderSpaceZ);
+            }
+            
             switch (CurrentSetpoint)
             {
                 case ReefscapeSetpoints.Stow:
                     SetSetpoint(stow);
-                    _coralController.RequestIntake(funnelCoralIntake);
+                    _coralController.RequestIntake(funnelCoralIntake, CurrentIntakeMode != ReefscapeIntakeMode.L1);
                     _coralController.RequestIntake(froggyCoralIntake, false);
                     _coralController.RequestIntake(shooterAlgaeIntake, false);
                     _algaeController.RequestIntake(froggyAlgaeIntake, false);
@@ -238,25 +247,29 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     if (CurrentIntakeMode == ReefscapeIntakeMode.L1 && !hasCoral && CurrentRobotMode == ReefscapeRobotMode.Coral)
                     {
                         SetSetpoint(froggyCoral);
+                        _coralController.SetTargetState(froggyCoralStowState);
                         _coralController.RequestIntake(froggyCoralIntake);
                         _coralController.RequestIntake(funnelCoralIntake, false);
                     }
                     else if (CurrentRobotMode == ReefscapeRobotMode.Coral && !hasCoral)
                     {
                         SetSetpoint(intakeFunnel);
+                        _coralController.SetTargetState(shooterCoralStowState);
                         _coralController.RequestIntake(funnelCoralIntake, !shooterHasAlgae);
                         _coralController.RequestIntake(froggyCoralIntake, false);
                     }
                     else if (CurrentRobotMode == ReefscapeRobotMode.Algae && (CurrentSetpoint == ReefscapeSetpoints.HighAlgae || CurrentSetpoint != ReefscapeSetpoints.LowAlgae) && !hasAlgae && !shooterHasCoral)
                     {
+                        _algaeController.SetTargetState(shooterAlgaeStowState);
                         _algaeController.RequestIntake(shooterAlgaeIntake);
                         _algaeController.RequestIntake(froggyAlgaeIntake, false);
                     }
-                    if (CurrentRobotMode == ReefscapeRobotMode.Algae)
+                    if (CurrentRobotMode == ReefscapeRobotMode.Algae && !hasAlgae)
                     {
                         SetSetpoint(froggyAlgae);
-                        _coralController.RequestIntake(froggyAlgaeIntake);
-                        _coralController.RequestIntake(shooterAlgaeIntake, false);
+                        _algaeController.SetTargetState(froggyAlgaeStowState);
+                        _algaeController.RequestIntake(froggyAlgaeIntake);
+                        _algaeController.RequestIntake(shooterAlgaeIntake, false);
                     }
                     
                     break;
@@ -281,6 +294,7 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     break;
                 case ReefscapeSetpoints.Stack:
                     SetSetpoint(lollipopIntake);
+                    _algaeController.SetTargetState(shooterAlgaeStowState);
                     _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
                     break;
                 case ReefscapeSetpoints.L2:
@@ -296,6 +310,7 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     break;
                 case ReefscapeSetpoints.LowAlgae:
                     SetSetpoint(FacingReef ? frontLowAlgae : backLowAlgae);
+                    _algaeController.SetTargetState(shooterAlgaeStowState);
                     _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
                     break;
                 case ReefscapeSetpoints.L3:
@@ -311,6 +326,7 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     break;
                 case ReefscapeSetpoints.HighAlgae:
                     SetSetpoint(FacingReef ? frontHighAlgae : backHighAlgae);
+                    _algaeController.SetTargetState(shooterAlgaeStowState);
                     _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
                     break;
                 case ReefscapeSetpoints.L4:
