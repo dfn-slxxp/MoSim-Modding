@@ -15,4 +15,5 @@ MonoBehaviour:
   elevatorHeight: 2.35
   eeArmAngle: -258.6
   froggyAngle: 7
-  climbPivotsAngle: 0
+  climbPivot1Angle: 0
+  climbPivot2Angle: 0
