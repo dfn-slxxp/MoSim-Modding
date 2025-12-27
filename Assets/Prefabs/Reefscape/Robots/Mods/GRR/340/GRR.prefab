@@ -45616,8 +45616,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014498579, y: 0.03526384, z: 0.04829015}
-  m_Center: {x: -0.27770245, y: -0.009170736, z: 0.1058174}
+  m_Size: {x: 0.014498579, y: 0.04090913, z: 0.06214592}
+  m_Center: {x: -0.2777051, y: -0.0063473196, z: 0.10429122}
 --- !u!1 &3629398094590662839
 GameObject:
   m_ObjectHideFlags: 0
@@ -73608,7 +73608,7 @@ MonoBehaviour:
   wristPID:
     kP: 0.8
     kI: 0
-    kD: 0
+    kD: 0.1
     Max: 18
     Isaturation: 1
   climberPID:
