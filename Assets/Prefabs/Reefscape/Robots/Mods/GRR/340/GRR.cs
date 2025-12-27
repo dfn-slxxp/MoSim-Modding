@@ -67,6 +67,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         private float _wristAngle;
         private float _elevatorDistance;
         private float _climberAngle;
+        private GRRSetpoint _currentSetpoint;
 
         protected override void Start()
         {
@@ -75,6 +76,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             wrist.SetPid(wristPID);
             climber.SetPid(climberPID);
 
+            _currentSetpoint = stow;
             _wristAngle = stow.wristTarget;
             _elevatorDistance = stow.elevatorDistance;
             _climberAngle = stow.climberTarget;
@@ -184,6 +186,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         private void SetSetpoint(GRRSetpoint setpoint)
         {
+            _currentSetpoint = setpoint;
             _wristAngle = setpoint.wristTarget;
             _elevatorDistance = setpoint.elevatorDistance;
             _climberAngle = setpoint.climberTarget;
@@ -191,9 +194,19 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         private void UpdateSetpoints()
         {
-            wrist.SetTargetAngle(_wristAngle).withAxis(JointAxis.X).flipDirection();
+            var wristAngleCall = wrist.SetTargetAngle(_wristAngle).withAxis(JointAxis.X).flipDirection();
+            if (_currentSetpoint != null && _currentSetpoint.wristNoWrapAngle != 360)
+            {
+                wristAngleCall.noWrap(_currentSetpoint.wristNoWrapAngle);
+            }
+            
             elevator.SetTarget(_elevatorDistance);
-            climber.SetTargetAngle(_climberAngle).withAxis(JointAxis.Z).flipDirection();
+            
+            var climberAngleCall = climber.SetTargetAngle(_climberAngle).withAxis(JointAxis.Z).flipDirection();
+            if (_currentSetpoint != null && _currentSetpoint.climberNoWrapAngle != 360)
+            {
+                climberAngleCall.noWrap(_currentSetpoint.climberNoWrapAngle);
+            }
         }
 
         private IEnumerator PlacePiece()
