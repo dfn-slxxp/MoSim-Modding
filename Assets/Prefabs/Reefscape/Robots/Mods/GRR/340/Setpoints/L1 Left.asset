@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wristTarget: -145
   elevatorDistance: 9
-  climberTarget: 0
+  climberTarget: -90
+  wristNoWrapAngle: 0
+  climberNoWrapAngle: 0
