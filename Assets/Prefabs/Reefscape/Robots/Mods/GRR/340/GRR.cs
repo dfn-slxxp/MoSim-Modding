@@ -199,6 +199,10 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             {
                 wristAngleCall.noWrap(_currentSetpoint.wristNoWrapAngle);
             }
+            else
+            {
+                wrist.noWrap = false;
+            }
             
             elevator.SetTarget(_elevatorDistance);
             
@@ -206,6 +210,10 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             if (_currentSetpoint != null && _currentSetpoint.climberNoWrapAngle != 360)
             {
                 climberAngleCall.noWrap(_currentSetpoint.climberNoWrapAngle);
+            }
+            else
+            {
+                climber.noWrap = false;
             }
         }
 
@@ -244,6 +252,16 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     time = 0.4f;
                     force = new Vector3(0, 0f, 3f);
                     maxSpeed = 0.5f;
+                }
+
+                // Reverse force if coral is in stow position
+                // Check if we came from Stow/Intake position and coral was in stow state
+                bool isInStow = (LastSetpoint == ReefscapeSetpoints.Stow || LastSetpoint == ReefscapeSetpoints.Intake) &&
+                                 _coralController.GetCurrentState() == coralStowState;
+                
+                if (isInStow)
+                {
+                    force = -force;
                 }
 
                 _coralController.ReleaseGamePieceWithContinuedForce(force, time, maxSpeed);
