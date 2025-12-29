@@ -97,7 +97,9 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
         [Header("Rollers n Other Stuff ig")]
         [SerializeField] private GenericRoller[] froggyRollers;
 
+        [Header("Colliders n shit")]
         [SerializeField] private CapsuleCollider[] froggyRollerColliders;
+        [SerializeField] private MeshCollider[] shooterCollidersForAlgae;
         
         
         private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode
@@ -218,13 +220,25 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
             {
                 if (_algaeController.currentStateNum == shooterAlgaeStowState.stateNum && LastSetpoint == ReefscapeSetpoints.Barge)
                 {
+                    foreach (var col in shooterCollidersForAlgae)
+                    {
+                        col.enabled = false;
+                    }
                     _algaeController.ReleaseGamePieceWithForce(new Vector3(shooterNetRelease.x, shooterNetRelease.y, shooterNetRelease.z));
                 } else if (_algaeController.currentStateNum == shooterAlgaeStowState.stateNum && LastSetpoint == ReefscapeSetpoints.Processor)
                 {
+                    foreach (var col in shooterCollidersForAlgae)
+                    {
+                        col.enabled = false;
+                    }
                     _algaeController.ReleaseGamePieceWithForce(new Vector3(shooterProcRelease.x, shooterProcRelease.y, shooterProcRelease.z));
                 }
                 else
                 {
+                    foreach (var col in shooterCollidersForAlgae)
+                    {
+                        col.enabled = false;
+                    }
                     _algaeController.ReleaseGamePieceWithForce(new Vector3(ForgyProcRelease.x, ForgyProcRelease.y, ForgyProcRelease.z));
                 }
             }
@@ -325,16 +339,25 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     
                     break;
                 case ReefscapeSetpoints.Place:
-                    if (CurrentRobotMode == ReefscapeRobotMode.Algae && LastSetpoint == ReefscapeSetpoints.Barge)
+                    if (shooterHasAlgae && LastSetpoint == ReefscapeSetpoints.Barge)
                     {
                         SetSetpoint(bargePlace);
                     }
-                    else if (CurrentRobotMode == ReefscapeRobotMode.Coral && LastSetpoint == ReefscapeSetpoints.L4)
+                    else if (shooterHasCoral && LastSetpoint == ReefscapeSetpoints.L4)
                     {
                         SetSetpoint(FacingReef ? frontL4 : backL4Scored);
                     }
                     PlacePiece();
-            break;
+                    foreach (var col in shooterCollidersForAlgae)
+                    {
+                        col.enabled = true;
+                    }
+                    foreach (var col in froggyRollerColliders)
+                    {
+                        col.enabled = true;
+                    }
+                    
+                    break;
                 case ReefscapeSetpoints.L1:
                     SetSetpoint(shooterHasCoral? eeL1 : froggyCoralPlace);
 
