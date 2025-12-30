@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4c3a1d7dcdde24b8cc1cd2c9723898, type: 3}
   m_Name: BackLowAlgae
   m_EditorClassIdentifier: 
-  elevatorHeight: 0.18
-  eeArmAngle: -222.4
+  elevatorHeight: 0.98
+  eeArmAngle: -224.3
   froggyAngle: 7
   climbPivot1Angle: 0
   climbPivot2Angle: 0
