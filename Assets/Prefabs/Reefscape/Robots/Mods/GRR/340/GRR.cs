@@ -115,7 +115,20 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             SetRobotMode(ReefscapeRobotMode.Coral); // hehe
             SetWheelSpeeds(0, 0);
 
-            if (BaseGameManager.Instance.RobotState == RobotState.Disabled) return;
+            if (BaseGameManager.Instance.RobotState == RobotState.Disabled)
+            {
+                if (intakeAudioSource != null && intakeAudioSource.isPlaying)
+                {
+                    intakeAudioSource.Stop();
+                }
+
+                if (gooseAudioSource != null && gooseAudioSource.isPlaying)
+                {
+                    gooseAudioSource.Stop();
+                }
+
+                return;
+            }
 
             bool hasCoral = _coralController.HasPiece();
             bool coralSeated = _coralController.atTarget;
