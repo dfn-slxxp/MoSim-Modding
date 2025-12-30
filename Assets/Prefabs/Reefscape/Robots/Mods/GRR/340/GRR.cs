@@ -51,6 +51,8 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         [Header("Audio")]
         [SerializeField] private AudioSource intakeAudioSource;
         [SerializeField] private AudioClip intakeAudioClip;
+        [SerializeField] private AudioSource gooseAudioSource;
+        [SerializeField] private AudioClip gooseAudioClip;
 
         [Header("Goose Wheel Animation")]
         [SerializeField] private GenericAnimationJoint[] gooseAnimationWheels;
@@ -63,6 +65,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
         private RobotGamePieceController<ReefscapeGamePiece, ReefscapeGamePieceData>.GamePieceControllerNode _coralController;
 
         private bool _alreadyPlaced = false;
+        private float _placeAudioStartTime = -1f;
 
         private float _wristAngle;
         private float _elevatorDistance;
@@ -86,9 +89,19 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
             _coralController.gamePieceStates = new[] { coralIntakeState, coralStowState };
             _coralController.intakes.Add(coralIntakeComponent);
 
-            intakeAudioSource.clip = intakeAudioClip;
-            intakeAudioSource.loop = true;
-            intakeAudioSource.Stop();
+            if (intakeAudioSource != null && intakeAudioClip != null)
+            {
+                intakeAudioSource.clip = intakeAudioClip;
+                intakeAudioSource.loop = true;
+                intakeAudioSource.Stop();
+            }
+            
+            if (gooseAudioSource != null && gooseAudioClip != null)
+            {
+                gooseAudioSource.clip = gooseAudioClip;
+                gooseAudioSource.loop = true;
+                gooseAudioSource.Stop();
+            }
         }
 
         private void LateUpdate()
@@ -167,9 +180,13 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     break;
                 case ReefscapeSetpoints.LowAlgae:
                     SetSetpoint(lowAlgae);
+                    // Move rollers on algae setpoints (same as outtake)
+                    SetWheelSpeeds(-gooseAnimationWheelSpeed, 0);
                     break;
                 case ReefscapeSetpoints.HighAlgae:
                     SetSetpoint(highAlgae);
+                    // Move rollers on algae setpoints (same as outtake)
+                    SetWheelSpeeds(-gooseAnimationWheelSpeed, 0);
                     break;
                 case ReefscapeSetpoints.Climb:
                     SetSetpoint(climb);
@@ -179,6 +196,61 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
                     break;
                 default:
                     throw new System.ArgumentOutOfRangeException();
+            }
+
+            // Play funnel audio when actively intaking coral (same condition as intake wheels)
+            bool isIntaking = (CurrentSetpoint == ReefscapeSetpoints.Stow || CurrentSetpoint == ReefscapeSetpoints.Intake) &&
+                              !coralSeated && IntakeAction.IsPressed() && safe;
+            
+            if (isIntaking)
+            {
+                if (intakeAudioSource != null && !intakeAudioSource.isPlaying)
+                {
+                    intakeAudioSource.Play();
+                }
+            }
+            else
+            {
+                if (intakeAudioSource != null && intakeAudioSource.isPlaying)
+                {
+                    intakeAudioSource.Stop();
+                }
+            }
+
+            // Play goose audio when at algae setpoints or when actually scoring (Place setpoint)
+            bool isAtAlgae = CurrentSetpoint == ReefscapeSetpoints.LowAlgae ||
+                             CurrentSetpoint == ReefscapeSetpoints.HighAlgae;
+            
+            bool isScoring = CurrentSetpoint == ReefscapeSetpoints.Place;
+            
+            // Track when we enter Place setpoint for timing the audio
+            if (isScoring && _placeAudioStartTime < 0)
+            {
+                _placeAudioStartTime = Time.time;
+            }
+            else if (!isScoring)
+            {
+                _placeAudioStartTime = -1f;
+            }
+            
+            // Check if Place audio should still be playing (0.75 seconds)
+            bool shouldPlayPlaceAudio = isScoring && 
+                                        _placeAudioStartTime >= 0 && 
+                                        (Time.time - _placeAudioStartTime) < 0.45f;
+            
+            if (isAtAlgae || shouldPlayPlaceAudio)
+            {
+                if (gooseAudioSource != null && !gooseAudioSource.isPlaying)
+                {
+                    gooseAudioSource.Play();
+                }
+            }
+            else
+            {
+                if (gooseAudioSource != null && gooseAudioSource.isPlaying)
+                {
+                    gooseAudioSource.Stop();
+                }
             }
 
             UpdateSetpoints();
