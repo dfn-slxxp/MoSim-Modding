@@ -16,4 +16,4 @@ MonoBehaviour:
   elevatorDistance: 0
   climberTarget: -90
   wristNoWrapAngle: 0
-  climberNoWrapAngle: 180
+  climberNoWrapAngle: -100

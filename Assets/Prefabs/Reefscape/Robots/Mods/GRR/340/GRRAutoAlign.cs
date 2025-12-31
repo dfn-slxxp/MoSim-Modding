@@ -31,7 +31,7 @@ namespace Prefabs.Reefscape.Robots.Mods.GRR._340
 
         [Header("Rotation")]
         [Tooltip("Kp constant to apply to the robot's rotation")]
-        public float rotateKp = 1.25f;
+        public float rotateKp = 1f;
 
         private DriveController _driveController;
         private ReefscapeRobotBase _base;
