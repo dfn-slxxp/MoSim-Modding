@@ -644,7 +644,7 @@ HingeJoint:
     targetPosition: 0
   m_UseMotor: 1
   m_Motor:
-    targetVelocity: -3000
+    targetVelocity: -2000
     force: 3.4028233e+38
     freeSpin: 0
   m_UseLimits: 0
@@ -4462,7 +4462,6 @@ Transform:
   - {fileID: 8940306755009222756}
   - {fileID: 2761969132183312671}
   - {fileID: 7295584400138049107}
-  - {fileID: 4993816828177057557}
   - {fileID: 8593906981348948469}
   - {fileID: 7896081438401833054}
   - {fileID: 7832934748290745371}
@@ -7795,7 +7794,7 @@ HingeJoint:
     targetPosition: 0
   m_UseMotor: 1
   m_Motor:
-    targetVelocity: -3000
+    targetVelocity: -2000
     force: 3.4028233e+38
     freeSpin: 0
   m_UseLimits: 0
@@ -14650,6 +14649,7 @@ GameObject:
   - component: {fileID: 2598125210183861139}
   - component: {fileID: 2364271837921660110}
   - component: {fileID: 2068971025715371441}
+  - component: {fileID: 4923504903127326388}
   m_Layer: 6
   m_Name: Funnel Flap 1 (Bent)
   m_TagString: Untagged
@@ -14724,6 +14724,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &4923504903127326388
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097394084367914973}
+  m_Material: {fileID: 13400000, guid: 91a97ecb2bc4d2f46b9d7b6d3f66552a, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -257350043495160231, guid: 92559ea18a6f71d49892adbc66f07411, type: 3}
 --- !u!1 &1099032550827799768
 GameObject:
   m_ObjectHideFlags: 0
@@ -16982,13 +17004,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1219947862170563695}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.13777669, y: -0.01452413, z: 0.0033072024, w: 0.9903513}
-  m_LocalPosition: {x: 0.0975, y: -0.5545, z: -0.1118}
+  m_LocalRotation: {x: 0.2387842, y: -0.019644141, z: 0.011923899, w: 0.9708008}
+  m_LocalPosition: {x: 0.0976, y: -0.5397, z: -0.1252}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8404183617119957411}
-  m_LocalEulerAnglesHint: {x: 15.842, y: -1.659, z: 0.152}
+  m_LocalEulerAnglesHint: {x: 27.652, y: -2.099, z: 0.891}
 --- !u!114 &739042464162273816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17012,8 +17034,8 @@ MonoBehaviour:
   boxExtents: {x: 0, y: 0, z: 0}
   maxDistance: 10
   accuracy: 2
-  lockXAxis: 0
-  lockYAxis: 0
+  lockXAxis: 1
+  lockYAxis: 1
   lockZAxis: 1
   roationForce: 150
   maxRotationSpeed: 100
@@ -21663,7 +21685,7 @@ HingeJoint:
     targetPosition: 0
   m_UseMotor: 1
   m_Motor:
-    targetVelocity: -3000
+    targetVelocity: -2000
     force: 3.4028233e+38
     freeSpin: 0
   m_UseLimits: 0
@@ -23451,142 +23473,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 254953894524792271}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1647043736508482082
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4993816828177057557}
-  - component: {fileID: 2956205314194752962}
-  - component: {fileID: 4186320496444047414}
-  - component: {fileID: 2850607550047168528}
-  - component: {fileID: 5917012169928127741}
-  m_Layer: 6
-  m_Name: GameObject (3)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4993816828177057557
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647043736508482082}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.67437977, y: 0.21263108, z: -0.67437977, w: -0.2126312}
-  m_LocalPosition: {x: -0.0569, y: -0.018181324, z: 0.05139637}
-  m_LocalScale: {x: 100, y: 99.999985, z: 100}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4613988137891968763}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &2956205314194752962
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647043736508482082}
-  m_Material: {fileID: 13400000, guid: 99a4521ed91e2a74fb49255117e7d7d0, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.00025
-  m_Height: 0.001
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &4186320496444047414
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647043736508482082}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!59 &2850607550047168528
-HingeJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647043736508482082}
-  serializedVersion: 3
-  m_ConnectedBody: {fileID: 8921164627416285410}
-  m_ConnectedArticulationBody: {fileID: 0}
-  m_Anchor: {x: 0, y: 0, z: 0}
-  m_Axis: {x: 0, y: 1, z: 0}
-  m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  m_UseSpring: 0
-  m_Spring:
-    spring: 0
-    damper: 0
-    targetPosition: 0
-  m_UseMotor: 1
-  m_Motor:
-    targetVelocity: -3000
-    force: 3.4028233e+38
-    freeSpin: 0
-  m_UseLimits: 0
-  m_ExtendedLimits: 0
-  m_UseAcceleration: 0
-  m_Limits:
-    min: 0
-    max: 0
-    bounciness: 0
-    bounceMinVelocity: 0.2
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
---- !u!114 &5917012169928127741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647043736508482082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c70544bdb8675d748968fd7092a43259, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1653796317425517075
 GameObject:
   m_ObjectHideFlags: 0
@@ -34372,8 +34258,8 @@ Transform:
   m_GameObject: {fileID: 2473526864040642199}
   serializedVersion: 2
   m_LocalRotation: {x: 0.27689537, y: -0, z: -0, w: 0.9609001}
-  m_LocalPosition: {x: 0.1144, y: -0.4719, z: -0.1926}
-  m_LocalScale: {x: 1.7862871, y: 1.4931175, z: 0.07119998}
+  m_LocalPosition: {x: 0.1144, y: -0.4685, z: -0.1955}
+  m_LocalScale: {x: 1.471549, y: 1.3580621, z: 0.07119998}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8404183617119957411}
@@ -34402,9 +34288,9 @@ MonoBehaviour:
   boxExtents: {x: 0, y: 0, z: 0}
   maxDistance: 10
   accuracy: 2
-  lockXAxis: 0
-  lockYAxis: 0
-  lockZAxis: 1
+  lockXAxis: 1
+  lockYAxis: 1
+  lockZAxis: 0
   roationForce: 2
   maxRotationSpeed: 10
   useRotaion: 1
@@ -35411,15 +35297,15 @@ MonoBehaviour:
   <CurrentSetpoint>k__BackingField: 0
   <CurrentCoralStationMode>k__BackingField:
     <DropType>k__BackingField: 1
-    <DropDistance>k__BackingField: 1.7
+    <DropDistance>k__BackingField: 1.6
     <DropStrength>k__BackingField: 6
     <DropForceVariance>k__BackingField: 0
     <RotationVariance>k__BackingField: 0
     <DropOrientation>k__BackingField: 1
     <RequireIntaking>k__BackingField: 1
-    <TargetTransform>k__BackingField: {fileID: 2777279114916943253}
+    <TargetTransform>k__BackingField: {fileID: 7661947704357437979}
     <DrawDebugLines>k__BackingField: 0
-  superCycler: 0
+  superCycler: 1
   elevator: {fileID: -5212941126464287568}
   eeArm: {fileID: 7479176211183864266}
   froggy: {fileID: 406084429876047299}
@@ -35520,11 +35406,11 @@ MonoBehaviour:
     z: 0
   shooterNetRelease:
     x: 0
-    y: 0
-    z: 0
+    y: 4
+    z: 8
   ForgyProcRelease:
     x: 0
-    y: 0
+    y: 3
     z: 0
   forgCorlaScor:
     x: 0
@@ -35537,7 +35423,6 @@ MonoBehaviour:
   - {fileID: 6500721478079222017}
   - {fileID: 8087196177332342801}
   - {fileID: 6547211197522718292}
-  - {fileID: 5917012169928127741}
   - {fileID: 3956254760363573266}
   - {fileID: 3564423621473507796}
   - {fileID: 4259833318529559493}
@@ -40198,7 +40083,7 @@ Transform:
   m_GameObject: {fileID: 2828215419112469578}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.6836561, z: 0.72980434, w: 0}
-  m_LocalPosition: {x: 0.093, y: -0.3755, z: 0.4705}
+  m_LocalPosition: {x: 0.102, y: -0.3755, z: 0.4705}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -57808,7 +57693,6 @@ GameObject:
   - component: {fileID: 4718406977985670585}
   - component: {fileID: 5765669184758500245}
   - component: {fileID: 8727979927041563576}
-  - component: {fileID: 2353895564330586016}
   m_Layer: 6
   m_Name: 18t + 18t.001
   m_TagString: Untagged
@@ -57883,28 +57767,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2353895564330586016
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4151120857506403394}
-  m_Material: {fileID: 13400000, guid: 91a97ecb2bc4d2f46b9d7b6d3f66552a, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2364466029973718957, guid: 92559ea18a6f71d49892adbc66f07411, type: 3}
 --- !u!1 &4151735265928003574
 GameObject:
   m_ObjectHideFlags: 0
@@ -64945,8 +64807,6 @@ GameObject:
   - component: {fileID: 1791733913848027758}
   - component: {fileID: 5418644596247314764}
   - component: {fileID: 7486176811274462557}
-  - component: {fileID: 3155059259079613473}
-  - component: {fileID: 7046661174556696918}
   m_Layer: 6
   m_Name: 24t HTD Pulley 40mm Wide
   m_TagString: Untagged
@@ -65021,50 +64881,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3155059259079613473
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4723165710799073032}
-  m_Material: {fileID: 13400000, guid: 91a97ecb2bc4d2f46b9d7b6d3f66552a, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2751599810477980493, guid: 92559ea18a6f71d49892adbc66f07411, type: 3}
---- !u!64 &7046661174556696918
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4723165710799073032}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2751599810477980493, guid: 92559ea18a6f71d49892adbc66f07411, type: 3}
 --- !u!1 &4729056463076869947
 GameObject:
   m_ObjectHideFlags: 0
@@ -83446,7 +83262,7 @@ Transform:
   m_GameObject: {fileID: 6291807308750733404}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.037}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -96860,7 +96676,7 @@ Transform:
   m_GameObject: {fileID: 7263511761553267103}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.138, z: 0.1288}
+  m_LocalPosition: {x: 0, y: 0.151, z: 0.111}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -100360,7 +100176,7 @@ MonoBehaviour:
   intakeSpeed: 39
   intakeForce: 157
   usePlanarTolerancing: 1
-  boxExtents: {x: 18.4, y: 2, z: 3}
+  boxExtents: {x: 12.1, y: 2, z: 3}
   maxDistance: 9.03
   accuracy: 7.05
   lockXAxis: 1
@@ -108734,7 +108550,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.2, z: 0.37}
+  m_Size: {x: 0.41, y: 0.2, z: 0.37}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8105007210302200873
 GameObject:
@@ -109953,7 +109769,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 72
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -112237,7 +112053,7 @@ HingeJoint:
     targetPosition: 0
   m_UseMotor: 1
   m_Motor:
-    targetVelocity: -3000
+    targetVelocity: -2000
     force: 3.4028233e+38
     freeSpin: 0
   m_UseLimits: 0
@@ -114330,7 +114146,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 72
   m_ImplicitCom: 1
   m_ImplicitTensor: 0
   m_UseGravity: 1
@@ -116274,6 +116090,7 @@ GameObject:
   - component: {fileID: 1861787228138838166}
   - component: {fileID: 2471486519110407929}
   - component: {fileID: 3201629585331291030}
+  - component: {fileID: 7178073643952598788}
   m_Layer: 6
   m_Name: Funnel Flap 2 (Bent)
   m_TagString: Untagged
@@ -116348,6 +116165,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &7178073643952598788
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8570094756886605802}
+  m_Material: {fileID: 13400000, guid: 91a97ecb2bc4d2f46b9d7b6d3f66552a, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4498957647639537276, guid: 92559ea18a6f71d49892adbc66f07411, type: 3}
 --- !u!1 &8579672432247368620
 GameObject:
   m_ObjectHideFlags: 0
@@ -116485,7 +116324,7 @@ HingeJoint:
     targetPosition: 0
   m_UseMotor: 1
   m_Motor:
-    targetVelocity: -3000
+    targetVelocity: -2000
     force: 3.4028233e+38
     freeSpin: 0
   m_UseLimits: 0
@@ -123460,7 +123299,7 @@ HingeJoint:
     targetPosition: 0
   m_UseMotor: 1
   m_Motor:
-    targetVelocity: -3000
+    targetVelocity: -2000
     force: 3.4028233e+38
     freeSpin: 0
   m_UseLimits: 0
@@ -124515,7 +124354,7 @@ HingeJoint:
     targetPosition: 0
   m_UseMotor: 1
   m_Motor:
-    targetVelocity: -3000
+    targetVelocity: -2000
     force: 3.4028233e+38
     freeSpin: 0
   m_UseLimits: 0

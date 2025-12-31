@@ -392,14 +392,18 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     }
                     break;
                 case ReefscapeSetpoints.Stack:
-                    SetSetpoint(lollipopIntake);
-                    _algaeController.SetTargetState(shooterAlgaeStowState);
-                    _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
-                    _algaeController.RequestIntake(froggyAlgaeIntake, false);
-                    foreach (var col in shooterCollidersForAlgae)
+                    if (!shooterHasCoral)
                     {
-                        col.enabled = true;
+                        SetSetpoint(lollipopIntake);
+                        _algaeController.SetTargetState(shooterAlgaeStowState);
+                        _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
+                        _algaeController.RequestIntake(froggyAlgaeIntake, false);
+                        foreach (var col in shooterCollidersForAlgae)
+                        {
+                            col.enabled = true;
+                        }
                     }
+
                     break;
                 case ReefscapeSetpoints.L2:
                     if (shooterHasCoral)
@@ -416,14 +420,18 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     }
                     break;
                 case ReefscapeSetpoints.LowAlgae:
-                    SetSetpoint(FacingReef ? frontLowAlgae : backLowAlgae);
-                    _algaeController.SetTargetState(shooterAlgaeStowState);
-                    _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
-                    _algaeController.RequestIntake(froggyAlgaeIntake, false);
-                    foreach (var col in shooterCollidersForAlgae)
+                    if (!shooterHasCoral)
                     {
-                        col.enabled = true;
+                        SetSetpoint(FacingReef ? frontLowAlgae : backLowAlgae);
+                        _algaeController.SetTargetState(shooterAlgaeStowState);
+                        _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
+                        _algaeController.RequestIntake(froggyAlgaeIntake, false);
+                        foreach (var col in shooterCollidersForAlgae)
+                        {
+                            col.enabled = true;
+                        }
                     }
+
                     break;
                 case ReefscapeSetpoints.L3:
                     if (shooterHasCoral)
@@ -436,14 +444,18 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     _algaeController.RequestIntake(froggyAlgaeIntake, false);
                     break;
                 case ReefscapeSetpoints.HighAlgae:
-                    SetSetpoint(FacingReef ? frontHighAlgae : backHighAlgae);
-                    _algaeController.SetTargetState(shooterAlgaeStowState);
-                    _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
-                    _algaeController.RequestIntake(froggyAlgaeIntake, false);
-                    foreach (var col in shooterCollidersForAlgae)
+                    if (!shooterHasCoral)
                     {
-                        col.enabled = true;
+                        SetSetpoint(FacingReef ? frontHighAlgae : backHighAlgae);
+                        _algaeController.SetTargetState(shooterAlgaeStowState);
+                        _algaeController.RequestIntake(shooterAlgaeIntake, IntakeAction.IsPressed() && !hasAlgae);
+                        _algaeController.RequestIntake(froggyAlgaeIntake, false);
+                        foreach (var col in shooterCollidersForAlgae)
+                        {
+                            col.enabled = true;
+                        }
                     }
+
                     break;
                 case ReefscapeSetpoints.L4:
                     _algaeController.RequestIntake(funnelCoralIntake, false);
