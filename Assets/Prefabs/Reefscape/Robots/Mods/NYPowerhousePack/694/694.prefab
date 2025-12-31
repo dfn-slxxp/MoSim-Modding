@@ -17004,13 +17004,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1219947862170563695}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2387842, y: -0.019644141, z: 0.011923899, w: 0.9708008}
+  m_LocalRotation: {x: 0.23896688, y: -0.0018581054, z: 0.0075500594, w: 0.9709967}
   m_LocalPosition: {x: 0.0976, y: -0.5397, z: -0.1252}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8404183617119957411}
-  m_LocalEulerAnglesHint: {x: 27.652, y: -2.099, z: 0.891}
+  m_LocalEulerAnglesHint: {x: 27.652, y: 0, z: 0.891}
 --- !u!114 &739042464162273816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17034,9 +17034,9 @@ MonoBehaviour:
   boxExtents: {x: 0, y: 0, z: 0}
   maxDistance: 10
   accuracy: 2
-  lockXAxis: 1
-  lockYAxis: 1
-  lockZAxis: 1
+  lockXAxis: 0
+  lockYAxis: 0
+  lockZAxis: 0
   roationForce: 150
   maxRotationSpeed: 100
   useRotaion: 1
@@ -34285,14 +34285,14 @@ MonoBehaviour:
   intakeSpeed: 350
   intakeForce: 50
   usePlanarTolerancing: 0
-  boxExtents: {x: 0, y: 0, z: 0}
-  maxDistance: 10
+  boxExtents: {x: 6.5, y: 4.8, z: 13.2}
+  maxDistance: 11.08
   accuracy: 2
-  lockXAxis: 1
-  lockYAxis: 1
+  lockXAxis: 0
+  lockYAxis: 0
   lockZAxis: 0
-  roationForce: 2
-  maxRotationSpeed: 10
+  roationForce: 4.65
+  maxRotationSpeed: 32
   useRotaion: 1
   smoothHandoff: 1
   target: {fileID: 2777279114916943253}
@@ -35406,8 +35406,8 @@ MonoBehaviour:
     z: 0
   shooterNetRelease:
     x: 0
-    y: 4
-    z: 8
+    y: 3
+    z: 7
   ForgyProcRelease:
     x: 0
     y: 3

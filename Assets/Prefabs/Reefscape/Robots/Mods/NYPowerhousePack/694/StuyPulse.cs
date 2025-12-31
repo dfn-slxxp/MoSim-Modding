@@ -117,6 +117,8 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
         private float _climbPivot2TargetAngle;
 
         private ReefscapeAutoAlign align;
+
+        private bool stillInPlaceState = false;
         
         protected override void Start()
         {
@@ -238,7 +240,7 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                 }
                 else
                 {
-                    foreach (var col in shooterCollidersForAlgae)
+                    foreach (var col in froggyRollerColliders)
                     {
                         col.enabled = false;
                     }
@@ -259,6 +261,8 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
             {
                 _coralController.ReleaseGamePieceWithForce(new Vector3(0, 0, 5));
             }
+
+            stillInPlaceState = true;
         }
         
         private void FixedUpdate()
@@ -311,6 +315,19 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     col.enabled = true;
                 }
             }
+
+            if (hasCoral && !shooterHasCoral)
+            {
+                foreach (var roller in froggyRollers)
+                {
+                    roller.stopAngularVelocity();
+                }
+            }
+
+            if (CurrentSetpoint != ReefscapeSetpoints.Place)
+            {
+                stillInPlaceState = false;
+            }
             
             switch (CurrentSetpoint)
             {
@@ -357,7 +374,7 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     }
                     else if (CurrentRobotMode == ReefscapeRobotMode.Algae && !hasAlgae)
                     {
-                        if (LastSetpoint == ReefscapeSetpoints.Stow)
+                        if (LastSetpoint == ReefscapeSetpoints.Stow || CurrentSetpoint == ReefscapeSetpoints.Stow)
                         {
                             SetSetpoint(froggyAlgae);
                         }
@@ -368,16 +385,20 @@ namespace Prefabs.Reefscape.Robots.Mods.NYPowerhousePack._694
                     
                     break;
                 case ReefscapeSetpoints.Place:
-                    if (shooterHasAlgae && LastSetpoint == ReefscapeSetpoints.Barge)
+                    if (!stillInPlaceState)
                     {
-                        SetSetpoint(bargePlace);
+                        if (shooterHasAlgae && LastSetpoint == ReefscapeSetpoints.Barge)
+                        {
+                            SetSetpoint(bargePlace);
+                        }
+                        else if (shooterHasCoral && LastSetpoint == ReefscapeSetpoints.L4)
+                        {
+                            SetSetpoint(FacingReef ? frontL4 : backL4Scored);
+                        }
+
+                        PlacePiece();
                     }
-                    else if (shooterHasCoral && LastSetpoint == ReefscapeSetpoints.L4)
-                    {
-                        SetSetpoint(FacingReef ? frontL4 : backL4Scored);
-                    }
-                    PlacePiece();
-                    
+
                     break;
                 case ReefscapeSetpoints.L1:
                     SetSetpoint(shooterHasCoral? eeL1 : froggyCoralPlace);
