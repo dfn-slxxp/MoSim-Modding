@@ -99997,7 +99997,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4186519539012157178}
   - component: {fileID: 852322477428954892}
-  - component: {fileID: 8349381017504448419}
+  - component: {fileID: 6216303531341031929}
   m_Layer: 6
   m_Name: Robot Signal Light
   m_TagString: Untagged
@@ -100028,7 +100028,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7440945148829989256}
   m_Mesh: {fileID: 7617504947827680666, guid: 92559ea18a6f71d49892adbc66f07411, type: 3}
---- !u!23 &8349381017504448419
+--- !u!23 &6216303531341031929
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100050,7 +100050,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cdc050820a6e9f343bf2ffd9648aa7a6, type: 2}
+  - {fileID: 2100000, guid: b6f184644a9ab1245a071b0059cddaac, type: 2}
   - {fileID: 2100000, guid: 4fee27b819da64142b7a2a9ba75bb033, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
