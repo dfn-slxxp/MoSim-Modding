@@ -74516,7 +74516,7 @@ MonoBehaviour:
   alliance: 0
   bumperMeshes:
   - {fileID: 3109221060711403616}
-  blueBumperMaterial: {fileID: 2100000, guid: c610fdf0d9fcc428e9c4e0c7314b666d, type: 2}
+  blueBumperMaterial: {fileID: 2100000, guid: 3e1a70866406ce94ea5b1db42fb51c43, type: 2}
   redBumperMaterial: {fileID: 2100000, guid: 8891c8be8334c264dbe596d910db7283, type: 2}
   <CurrentSetpoint>k__BackingField: 0
   <CurrentCoralStationMode>k__BackingField:
